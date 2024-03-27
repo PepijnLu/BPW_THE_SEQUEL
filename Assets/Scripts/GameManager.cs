@@ -4,29 +4,37 @@ using UnityEngine;
 using TMPro;
 
 public class GameManager : MonoBehaviour
-{
+{ 
     /*
         TO DO:
 
         fix:  
-        -you can move before enemies are finished w shooting
-        -make sure taking damage happens not at the same time
+        -something sometimes breaks the turns
+        -room 1 doesnt open if there are no enemies inside from the start
 
         add:
-        -DIFFERENT BEHAVIOUR FOR DIFFERENT ENEMIES
         -FUNCTIONALITY TO CHESTS
         -SOME ITEM/PICKUP FOR THE EXIT 
         -MAKE HALLWAYS INTERESTING
+        -MORE SOUND (Getting hit, dying, reaching the exit)
+        -BALANCING (Playtesting)
 
-        -TUTORIAL
+        -TUTORIAL:
+            -explain movement
+            -explain turn based system
+            -explain battles
+            -explain ranged enemies
+            -explain opening rooms
+            -explain opening chests
+            -explain opening exits
+            -explain advancing
+            -explain orbs
+            -explain tab
 
         improve:
-        -CODE
-        
+        -CODE        
         -difficulty scaling
-        -battles
-        -procedural generation
-        -enemy pathfinding-
+
 
         probably fixed:
         -lock the exit (EASY FIX)

@@ -122,7 +122,7 @@ public class EnemyController : MonoBehaviour
             {
                 if (enemyStats.enemyInt == 3)
                 {
-                    if ( (directionsGO[(directions.Count - 1 - i)] != null) && (succesfullyMoved == false) && (distanceToPlayer.magnitude < 20))
+                    if ( (directionsGO[directions[directions.Count - 1 - i] - 1] != null) && (succesfullyMoved == false) && (distanceToPlayer.magnitude < 20))
                     {
                         Movement.instance.MoveTile(directions[(directions.Count - 1 - i)], gameObject, up, down, right, left);
                         succesfullyMoved = true;
@@ -250,10 +250,11 @@ public class EnemyController : MonoBehaviour
         laserRight.transform.Rotate(0f, 0f, -90f);
         laserRight.GetComponent<Laser>().enemy = gameObject;
 
-        while ((laserUp != null) && (laserDown != null) && (laserLeft != null) && (laserRight != null))
+        while ((laserUp != null) || (laserDown != null) || (laserLeft != null) || (laserRight != null))
         {
             yield return null;
         }
+        Debug.Log("lasers: " + laserUp + laserDown + laserLeft + laserRight);
         notDoneFiring = false;
         yield return null;
     }

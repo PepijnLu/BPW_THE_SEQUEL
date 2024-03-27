@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     public GameObject up, down, left, right;
     public int orbsCollected, maxOrbs;
     public TextMeshProUGUI orbText;
+    public Transform tutorialStart;
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +30,7 @@ public class PlayerController : MonoBehaviour
  
         Movement.instance.movesRemainingTxt.text = ("Moves remaining: " + (playerStats.maxMoves - playerStats.moves).ToString());
         GameManager.instance.orbText.text = maxOrbs.ToString();
+        transform.position = tutorialStart.position;
         playerStats.SetValues();
     }
 
@@ -125,11 +127,10 @@ public class PlayerController : MonoBehaviour
         right = null;
     }
 
-    void FixedUpdate()
+    IEnumerator Tutorial()
     {
-       
+        yield return null;
     }
-
     void PlayerTurn()
     {
         Debug.Log("Player Turn");
@@ -138,30 +139,18 @@ public class PlayerController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.W) && up != null)
             {
                 Movement.instance.MoveTile(1, gameObject, up, down, right, left);
-                //playerStats.moveStarted = true;
-                //playerStats.collisionCheck = true;
-                //turnStarted = true;
             }
             if (Input.GetKeyDown(KeyCode.S) && down != null)
             {
                 Movement.instance.MoveTile(2, gameObject, up, down, right, left);
-                //playerStats.moveStarted = true;
-                //playerStats.collisionCheck = true;
-                //turnStarted = true;
             }
             if (Input.GetKeyDown(KeyCode.D ) && right != null)
             {
                 Movement.instance.MoveTile(3, gameObject, up, down, right, left);
-                //playerStats.moveStarted = true;
-                //playerStats.collisionCheck = true;
-                //turnStarted = true;
             }
             if (Input.GetKeyDown(KeyCode.A) && left != null)
             {
                 Movement.instance.MoveTile(4, gameObject, up, down, right, left);
-                //playerStats.moveStarted = true;
-                //playerStats.collisionCheck = true;
-                //turnStarted = true;
             }
                 
         }

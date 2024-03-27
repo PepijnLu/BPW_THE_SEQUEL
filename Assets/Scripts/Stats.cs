@@ -12,7 +12,7 @@ public class Stats : MonoBehaviour
     public GameObject card;
     public TextMeshProUGUI hpText, damageText, nameText, maxMovesText;
     public GameObject icon;
-    public Sprite attack, defend, attacker, defender;
+    public Sprite attack, defend, attacker, defender, laserBoi;
     public Image sword;
     public Transform cardSlot;
     public bool turnDone, fired;
@@ -84,20 +84,37 @@ public class Stats : MonoBehaviour
             }
             maxHealth = Random.Range(1, powerLevel + 1);
             damage = Random.Range(1, powerLevel + 1);
-            if (damage > health)
+            if (Tutorial.instance.tutorial)
             {
-                firstStrike = true;
-                icon.GetComponent<Image>().sprite = attacker;
-                gameObject.GetComponent<SpriteRenderer>().sprite = attacker;
-                maxMoves = 2;
+                enemyInt = 1;
             }
             else
             {
-                firstStrike = false;
-                icon.GetComponent<Image>().sprite = defender;
-                gameObject.GetComponent<SpriteRenderer>().sprite = defender;
+                enemyInt = Random.Range(1, 4);
             }
-            
+            Image enemyIcon = icon.GetComponent<Image>();
+            SpriteRenderer enemySpriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+            switch(enemyInt)
+            {
+                case 1:
+                    enemyIcon.sprite = attacker;
+                    enemySpriteRenderer.sprite = attacker;
+                    maxMoves = 2;
+                    break;
+                case 2:
+                    enemyIcon.sprite = defender;
+                    enemySpriteRenderer.sprite = defender;
+                    maxMoves = 1;
+                    break;
+                case 3:
+                    enemyIcon.sprite = laserBoi;
+                    enemySpriteRenderer.sprite = laserBoi;
+                    maxMoves = 1;
+                    maxHealth = 1;
+                    health = 1;
+                    damage = 1;
+                    break;
+            }
         }
         
         health = maxHealth;

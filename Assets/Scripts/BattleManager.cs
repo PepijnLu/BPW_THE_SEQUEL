@@ -11,6 +11,7 @@ public class BattleManager : MonoBehaviour
     public Transform playerCardSlot, enemyCardSlot;
     public bool battle;
     public List<GameObject> battleOpponents;
+    public List<Stats> needToFinish;
     public Image playerSword, enemySword;
     GameObject[] cards;
     public bool attackMade, parryable, parried, triedToParry;
@@ -18,6 +19,7 @@ public class BattleManager : MonoBehaviour
     public GameObject playerAttackScreen, attackButton, parryButton;
     public TextMeshProUGUI attackText;
     public float distanceBetween;
+    public bool takingDamage;
 
     void Awake()
     {
@@ -28,6 +30,7 @@ public class BattleManager : MonoBehaviour
             deactivate.SetActive(false);
         }
         battleOpponents = new List<GameObject>(){};
+        needToFinish = new List<Stats>(){};
     }
 
     void Start()
@@ -96,6 +99,13 @@ public class BattleManager : MonoBehaviour
 
     public IEnumerator TakeDamage(Stats defender, int damage, Stats attacker)
     {
+        bool inQueue = false;
+        while (takingDamage)
+        {
+            inQueue = true;
+            yield return null;
+        }
+        takingDamage = true;
         Debug.Log("Take Damage pt 1");
         GameManager.instance.stopped = true;
         defender.card.SetActive(true);
@@ -122,6 +132,15 @@ public class BattleManager : MonoBehaviour
         defender.card.SetActive(false);
         GameManager.instance.stopped = false;
         StartCoroutine(Movement.instance.EndMove(attacker));
+        if (!inQueue)
+        {
+            foreach(Stats stats in needToFinish)
+            {
+                Movement.instance.EndMove(stats);
+            }
+            needToFinish.Clear();
+        }
+        takingDamage = false;
     }
 
     public IEnumerator AttackInBattle(Stats attacker, Stats defender)

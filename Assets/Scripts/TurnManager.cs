@@ -11,12 +11,13 @@ public class TurnManager : MonoBehaviour
 
     void Awake()
     {
+        isPlayerTurn = true;
         instance = this;
     }
     // Start is called before the first frame update
     void Start()
     {
-        isPlayerTurn = true;
+
     }
 
     // Update is called once per frame
@@ -36,8 +37,6 @@ public class TurnManager : MonoBehaviour
 
         if ( (obj.tag == "Player") )
         {
-            //Debug.Log("object" + obj);
-            //Debug.Log("player" + obj.GetComponent<Stats>().turnDone);
             if ( (obj.GetComponent<Stats>().turnDone == true) && (PickupManager.instance.selecting == false))
             {
                 obj.GetComponent<Stats>().turnDone = false;
@@ -47,8 +46,8 @@ public class TurnManager : MonoBehaviour
         }
         if ( (obj.tag == "Enemy") )
         {
+            Debug.Log("Enemy Turn Done");
             enemiesTurnDone++;
-            obj.GetComponent<Stats>().turnDone = false;
             if ( (enemiesTurnDone == GameManager.instance.enemies.Count))
             {
                 enemiesTurnDone = 0;
@@ -59,26 +58,27 @@ public class TurnManager : MonoBehaviour
     }
     public void SwapTurns(GameObject obj)
     {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
             if (obj.tag == "Player")
             {
                 isPlayerTurn = false;
                 obj.GetComponent<Stats>().moves = 0;
                 Movement.instance.movesRemainingTxt.text = ("Moves remaining: " + (obj.GetComponent<Stats>().moves).ToString());
-                
-                GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+            
+                Debug.Log("turn started enemy");
+            }
+            if (obj.tag == "Enemy")
+            {
                 foreach (GameObject enemy in enemies)
                 {
                     Stats enemyStats = enemy.GetComponent<Stats>();
                     enemyStats.fired = false;
                     enemyStats.moves = 0;
+                    enemyStats.turnDone = false;
                     enemy.GetComponent<EnemyController>().turnStarted = false;
                     //enemy.GetComponent<EnemyController>().CheckForPossibleMovement();
                     //StartCoroutine(enemy.GetComponent<EnemyController>().EnemyChillTime());
                 }
-                Debug.Log("turn started enemy");
-            }
-            if (obj.tag == "Enemy")
-            {
                 Debug.Log("turn started player");
                 isPlayerTurn = true;
                 GameManager.instance.player.GetComponent<PlayerController>().turnStarted = false;

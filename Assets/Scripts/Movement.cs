@@ -142,20 +142,28 @@ public class Movement : MonoBehaviour
                 enemyController.NukeDirections();
                 if ((stats.enemyInt == 3) && (!stats.fired))
                 {
+                    Vector2 distanceToPlayer = (stats.gameObject.transform.position - GameManager.instance.player.transform.position);
                     stats.fired = true;
-                    StartCoroutine(enemyController.FireLaser());
-                    while (enemyController.notDoneFiring)
+                    if (distanceToPlayer.magnitude < 20)
                     {
-                        yield return null;
+                        StartCoroutine(enemyController.FireLaser());
+                        while (enemyController.notDoneFiring)
+                        {
+                            yield return null;
+                        }
                     }
                 }
             }
-            if (!GameManager.instance.stopped)
+            if ((!GameManager.instance.stopped) && (!stats.turnDone))
             {
                 stats.turnDone = true;
-                //Debug.Log(stats.gameObject + "turn done");
+                Debug.Log(stats.gameObject + "turn done");
                 TurnManager.instance.CheckActions(stats.gameObject);
                 //StartCoroutine(EndMove(stats));
+            }
+            else if (GameManager.instance.stopped)
+            {
+                BattleManager.instance.needToFinish.Add(stats);
             }
         }
         Debug.Log("12345 SET BOOLS TO FALSE");

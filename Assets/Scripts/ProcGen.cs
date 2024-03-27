@@ -8,6 +8,8 @@ public class ProcGen : MonoBehaviour
     public PlayerController playerController;
     public static ProcGen instance;
     public Tilemap tilemap, collisionMap, exitMap, chestMap, decorationMap, rubbleMap;
+    public Tilemap tutorialGround, tutorialCollision, tutorialChest, tutorialExit;
+    public List<Tilemap> normalTilemaps, tutorialTilemaps;
     public Tile tile, wall, exit, block, chest, lockTile, doorTile;
     public List<Tile> rubbleTiles;
     public GameObject enemyPrefab, orbPrefab;
@@ -32,9 +34,10 @@ public class ProcGen : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        normalTilemaps = new List<Tilemap>(){tilemap, collisionMap, exitMap, chestMap, decorationMap, rubbleMap};
+        tutorialTilemaps = new List<Tilemap>(){tutorialGround, tutorialCollision, tutorialChest, tutorialExit};
         map = GenerateArray(500, 500, false);
-        GetRoomNumbers();
-
+        //GetRoomNumbers();
     }
 
     // Update is called once per frame
@@ -57,12 +60,16 @@ public class ProcGen : MonoBehaviour
         mainRoomLocations.Clear();
         mainRoomLengthWidthSize.Clear();
         extraRoomLocations.Clear();
-        collisionMap.ClearAllTiles();
-        tilemap.ClearAllTiles();
-        exitMap.ClearAllTiles();
-        decorationMap.ClearAllTiles();
-        chestMap.ClearAllTiles();
-        rubbleMap.ClearAllTiles();
+        // collisionMap.ClearAllTiles();
+        // tilemap.ClearAllTiles();
+        // exitMap.ClearAllTiles();
+        // decorationMap.ClearAllTiles();
+        // chestMap.ClearAllTiles();
+        // rubbleMap.ClearAllTiles();
+        foreach (Tilemap tmp in normalTilemaps)
+        {
+            tmp.ClearAllTiles();
+        }
         clearedRooms = false;
 
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");

@@ -222,9 +222,11 @@ MonoBehaviour:
   defend: {fileID: -1119638910, guid: 91ece539279118a438c900dfb08582ed, type: 3}
   attacker: {fileID: 1936497647, guid: ed4edcc13cc60764181cc25a7679faf6, type: 3}
   defender: {fileID: -807790066, guid: ed4edcc13cc60764181cc25a7679faf6, type: 3}
+  laserBoi: {fileID: -1066010435, guid: 707e83f2eb94b4d4382da07c9620546e, type: 3}
   sword: {fileID: 0}
   cardSlot: {fileID: 0}
   turnDone: 0
+  fired: 0
   inBattle: 0
   firstStrike: 0
   inList: 0
