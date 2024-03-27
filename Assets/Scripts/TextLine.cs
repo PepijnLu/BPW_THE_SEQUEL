@@ -5,13 +5,15 @@ using UnityEngine;
 public class TextLine : MonoBehaviour
 {
     public string textToDisplay;
+    public int duration;
     
     void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.gameObject.tag == "Player")
         {
             Debug.Log("Collision with player");
-            StartCoroutine(UIManager.instance.ShowTextForDuration(textToDisplay, 5f, UIManager.instance.tutorialText));
+            UIManager.instance.StartShowTextRoutine(textToDisplay, duration, UIManager.instance.tutorialText);
+            gameObject.SetActive(false);
         }
     }
 }

@@ -48,7 +48,7 @@ public class TurnManager : MonoBehaviour
         {
             Debug.Log("Enemy Turn Done");
             enemiesTurnDone++;
-            if ( (enemiesTurnDone == GameManager.instance.enemies.Count))
+            if ( (enemiesTurnDone >= GameManager.instance.enemies.Count))
             {
                 enemiesTurnDone = 0;
                 SwapTurns(obj);

@@ -67,6 +67,10 @@ public class Stats : MonoBehaviour
             cardSlot = GameObject.Find("enemyCardSlot").transform;
             sword = BattleManager.instance.enemySword;
         }
+        if (Tutorial.instance.tutorial && gameObject.tag == "Enemy")
+        {
+            SetValues();
+        }
     }
 
 
@@ -74,7 +78,22 @@ public class Stats : MonoBehaviour
     {
         if (gameObject.tag == "Enemy")
         {
-            if (mainRoomInt != 0)
+            if (Tutorial.instance.tutorial)
+            {
+                switch(Tutorial.instance.tutorialEnemiesSpawned)
+                {
+                    case 1:
+                        powerLevel = 1;
+                        enemyInt = 2;
+                        break;
+                    case 2:
+                        powerLevel = 2;
+                        enemyInt = 1;
+                        break;
+                }
+
+            }
+            else if (mainRoomInt != 0)
             {
                 powerLevel = Mathf.FloorToInt(((mainRoomInt) * 1.5f) + ((GameData.dungeonsCompleted * ProcGen.instance.maxMainRooms) * 1.5f));
             }
@@ -84,11 +103,7 @@ public class Stats : MonoBehaviour
             }
             maxHealth = Random.Range(1, powerLevel + 1);
             damage = Random.Range(1, powerLevel + 1);
-            if (Tutorial.instance.tutorial)
-            {
-                enemyInt = 1;
-            }
-            else
+            if (!Tutorial.instance.tutorial)
             {
                 enemyInt = Random.Range(1, 4);
             }

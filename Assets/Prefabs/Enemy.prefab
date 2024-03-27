@@ -210,7 +210,7 @@ MonoBehaviour:
   damage: 5
   maxMoves: 1
   moves: 0
-  enemyInt: 3
+  enemyInt: 0
   cardPrefab: {fileID: 1076290028306146198, guid: d815af32fd92e5d4b83e5bef136cd4fa, type: 3}
   card: {fileID: 0}
   hpText: {fileID: 0}

@@ -36,7 +36,6 @@ public class ProcGen : MonoBehaviour
     {
         normalTilemaps = new List<Tilemap>(){tilemap, collisionMap, exitMap, chestMap, decorationMap, rubbleMap};
         tutorialTilemaps = new List<Tilemap>(){tutorialGround, tutorialCollision, tutorialChest, tutorialExit};
-        map = GenerateArray(500, 500, false);
         //GetRoomNumbers();
     }
 
@@ -87,7 +86,7 @@ public class ProcGen : MonoBehaviour
         {
             Destroy(orb);
         }
-        
+        UIManager.instance.GenerateMinimap();
         GetRoomNumbers();
         TurnManager.instance.isPlayerTurn = true;
         playerController.turnStarted = false;
@@ -98,26 +97,6 @@ public class ProcGen : MonoBehaviour
             card.SetActive(false);
         }
     }
-    public static int[,] GenerateArray(int width, int height, bool empty)
-    {
-        int[,] map = new int[width, height];
-        for (int x = 0; x < map.GetUpperBound(0); x++)
-        {
-            for (int y = 0; y < map.GetUpperBound(1); y++)
-            {
-                if (empty)
-                {
-                    map[x, y] = 0;
-                }
-                else
-                {
-                    map[x, y] = 1;
-                }
-            }
-        }
-        return map;
-    }
-
     void GetRoomNumbers()
     {
         int size = Random.Range(minRoomSize, maxRoomSize);
