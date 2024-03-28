@@ -51,12 +51,17 @@ public class PlayerController : MonoBehaviour
                 PlayerTurn();
             }
         }
-        //dev thingy
+        //dev thingies
         if (Input.GetKeyDown(KeyCode.Space))
         {
             BattleManager.instance.attackMade = true;
         }
-
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            ChestManager.instance.Open();
+            AudioManager.instance.PlaySound(AudioManager.instance.audioSources["chestSFX"]);
+        }
+        //end dev thingies
         if (Input.GetKeyDown(KeyCode.Tab))
         {   
             if (GameManager.instance.stopped == false)
@@ -158,17 +163,6 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Exit")
-        {
-            Movement.instance.resetting = true;
-            StartCoroutine(SetResetting());
-            gameObject.transform.position = new Vector2(50.5f, 50.5f);
-            gameObject.transform.rotation = Quaternion.identity;
-            GameData.dungeonsCompleted++;
-            //GameData.roomsCleared = 0;
-            ProcGen.instance.GenerateDungeon();
-        }
-
         if (collision.gameObject.tag == "Enemy")
         {
             //BattleManager.instance.Battle(gameObject, collision.gameObject);
@@ -178,21 +172,39 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider)
     {
+        if (collider.gameObject.tag == "Exit")
+        {
+            AudioManager.instance.PlaySound(AudioManager.instance.audioSources["exitSFX"]);
+            Movement.instance.resetting = true;
+            StartCoroutine(SetResetting());
+            gameObject.transform.position = new Vector2(50.5f, 50.5f);
+            gameObject.transform.rotation = Quaternion.identity;
+            GameData.dungeonsCompleted++;
+            //GameData.roomsCleared = 0;
+            ProcGen.instance.GenerateDungeon();
+        }
+
         if (collider.gameObject.tag == "Pickup")
         {
             collider.gameObject.GetComponent<Pickup>().Activate(gameObject);
+            AudioManager.instance.PlaySound(AudioManager.instance.audioSources["pickupSFX"]);
         }
 
         if (collider.gameObject.tag == "Chest")
         {
             ChestManager.instance.Open();
+            AudioManager.instance.PlaySound(AudioManager.instance.audioSources["chestSFX"]);
+            Vector3Int cellPosition = ProcGen.instance.chestMap.WorldToCell(gameObject.transform.position);
+            ProcGen.instance.chestMap.SetTile(cellPosition, null);
         }
         if (collider.gameObject.tag == "Orb")
         {
+            AudioManager.instance.PlaySound(AudioManager.instance.audioSources["pickupSFX"]);
             orbsCollected++;
             Destroy(collider.gameObject);
             if (orbsCollected >= maxOrbs)
             {
+                AudioManager.instance.PlaySound(AudioManager.instance.audioSources["maxOrbSFX"]);
                 Debug.Log("MAX ORBS");
                 orbsCollected = 0;
                 playerStats.maxMoves++;

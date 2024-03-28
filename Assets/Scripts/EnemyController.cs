@@ -29,6 +29,7 @@ public class EnemyController : MonoBehaviour
     bool chillTimeStarted;
     public int blocksSurrounding;
     public bool notDoneFiring;
+    public Vector2 distanceToPlayer;
     // Start is called before the first frame update
     void Start()
     {
@@ -112,7 +113,7 @@ public class EnemyController : MonoBehaviour
     {
         if (!enemyStats.inBattle)
         {
-            Vector2 distanceToPlayer = (gameObject.transform.position - GameManager.instance.player.transform.position);
+            distanceToPlayer = (gameObject.transform.position - GameManager.instance.player.transform.position);
             Debug.Log("EnemyMove");
             succesfullyMoved = false;
             //randomDirection = Random.Range(1, 5);
@@ -266,9 +267,12 @@ public class EnemyController : MonoBehaviour
     void OnDisable()
     {
         GenerateLoot();
-        GameManager.instance.enemies.Remove(gameObject);
-        GameManager.instance.EnemyDeath(enemyStats.mainRoomInt, enemyStats.extraRoomInt);
-        Debug.Log("RIP");
+        if (!Tutorial.instance)
+        {
+            GameManager.instance.enemies.Remove(gameObject);
+            GameManager.instance.EnemyDeath(enemyStats.mainRoomInt, enemyStats.extraRoomInt);
+            Debug.Log("RIP");
+        }
         Destroy(up);
         Destroy(down);
         Destroy(left);
@@ -277,25 +281,42 @@ public class EnemyController : MonoBehaviour
 
     void GenerateLoot()
     {
-        int lootInt = Random.Range(1, 4);
-        if (lootInt == 1)
+        //int lootInt = Random.Range(1, 4);
+        int lootInt = 1;
+        if (Tutorial.instance != null)
         {
-            // Debug.Log("Generate loot");
-            GameObject newLoot = Instantiate(loot[lootInt - 1], transform.position, transform.rotation);
+            if (lootInt == 1)
+            {
+                if(Tutorial.instance.tutorial  && (Tutorial.instance.tutorialEnemiesSpawned != 2))
+                {
+                    //nothing
+                }
+                else
+                {
+                    GameObject newLoot = Instantiate(loot[lootInt - 1], transform.position, transform.rotation);
+                }
+            }
+        }
+        else
+        {
+            if (lootInt == 1)
+            {
+                GameObject newLoot = Instantiate(loot[lootInt - 1], transform.position, transform.rotation);
+            }
         }
 
     }
 
     void OnMouseEnter()
     {
-        if (GameManager.instance.stopped == false)
+        if ((GameManager.instance.stopped == false) || (Tutorial.instance.tutorial))
         {
             gameObject.GetComponent<Stats>().card.SetActive(true);
         }
     }
     void OnMouseExit()
     {
-        if (GameManager.instance.stopped == false)
+        if (GameManager.instance.stopped == false || (Tutorial.instance.tutorial))
         {
             gameObject.GetComponent<Stats>().card.SetActive(false);
         }

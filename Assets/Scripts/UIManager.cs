@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
     public float offsetFloat;
     public float sizeFloat;
     public Sprite roomImg, hallwayImg, minimapImg;
+    public int lastChangedImage;
 
     void Awake()
     {
@@ -32,7 +33,6 @@ public class UIManager : MonoBehaviour
     }
     public IEnumerator ShowTextForDuration(string text, float duration, TextMeshProUGUI textToWriteTo)
     {
-        tutorialCornerText.text = "";
         Debug.Log("show text: " + text);
         GameManager.instance.stopped = true;
         textToWriteTo.gameObject.SetActive(true);
@@ -101,25 +101,45 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void ChangeImageSprite(int direction)
+    public void ChangeImageSprite(int direction, Sprite sprite)
     {
         switch(direction)
         {
             case 0:
-                minimapSquares[((ProcGen.instance.maxMainRooms + 1) * (ProcGen.instance.maxMainRooms + 1)) - (ProcGen.instance.maxMainRooms + 1) + 1].sprite = roomImg;
+                lastChangedImage = ((ProcGen.instance.maxMainRooms + 1) * (ProcGen.instance.maxMainRooms + 1)) - (ProcGen.instance.maxMainRooms + 1);
                 break;
             case 1:
-                
+                lastChangedImage -= 7;
+                Debug.Log("minimap up");
                 break;
             case 2:
-
+                lastChangedImage += 7;
+                Debug.Log("minimap down");
                 break;
             case 3:
-
+                lastChangedImage -= 1;
+                Debug.Log("minimap left");
                 break;
             case 4:
-
+                lastChangedImage += 1;
+                Debug.Log("minimap right");
                 break;
+        }
+        Debug.Log("last image " + lastChangedImage);
+        if (minimapSquares.Count < lastChangedImage)
+        {
+            minimapSquares[lastChangedImage].sprite = sprite;
+        }
+    }
+
+    public void FillMinimapBackground()
+    {
+        foreach (Image img in minimapSquares)
+        {
+            if (img.sprite != roomImg && img.sprite != hallwayImg)
+            {
+                img.sprite = minimapImg;
+            }
         }
     }
     bool IsDivisible(int number, int divisor)

@@ -118,6 +118,10 @@ public class PickupManager : MonoBehaviour
         //playerHP.fontSize = (1 / playerHP.text.Length) * playerHP.fontSize;
         //playerDamage.fontSize = (1 / playerHP.text.Length) * playerHP.fontSize;
         StartCoroutine(Movement.instance.EndMove(GameManager.instance.playerStats));
+        foreach(Stats stats in BattleManager.instance.needToFinish)
+        {
+            StartCoroutine(Movement.instance.EndMove(stats));
+        }
         
         // if (playerStats.moves < playerStats.maxMoves)
         // {

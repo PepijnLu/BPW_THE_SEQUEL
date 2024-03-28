@@ -119,13 +119,20 @@ public class Movement : MonoBehaviour
         {
             StartCoroutine(EndMove(stats));
         }
+        else
+        {
+            if (!BattleManager.instance.needToFinish.Contains(stats))
+            {
+                BattleManager.instance.needToFinish.Add(stats);
+            }
+        }
     }
 
     public IEnumerator EndMove(Stats stats)
     {
         if ( (stats.moves >= stats.maxMoves) && GameManager.instance.stopped == false)
         {
-            if (stats.gameObject.tag == "Player")
+            if (stats.gameObject.tag == "Player" && TurnManager.instance.isPlayerTurn)
             {
                 PlayerController playerController = stats.gameObject.GetComponent<PlayerController>();
                 playerController.NukeDirections();
@@ -133,7 +140,7 @@ public class Movement : MonoBehaviour
                 yield return new WaitForSeconds(0.025f);
                 playerController.NukeDirections();
             }
-            else
+            else if ((!TurnManager.instance.isPlayerTurn) && stats.gameObject.tag == "Enemy")
             {
                 EnemyController enemyController = stats.gameObject.GetComponent<EnemyController>();
                 enemyController.NukeDirections();
@@ -144,7 +151,7 @@ public class Movement : MonoBehaviour
                 {
                     Vector2 distanceToPlayer = (stats.gameObject.transform.position - GameManager.instance.player.transform.position);
                     stats.fired = true;
-                    if (distanceToPlayer.magnitude < 20)
+                    if (distanceToPlayer.magnitude < 10)
                     {
                         StartCoroutine(enemyController.FireLaser());
                         while (enemyController.notDoneFiring)
@@ -158,12 +165,26 @@ public class Movement : MonoBehaviour
             {
                 stats.turnDone = true;
                 Debug.Log(stats.gameObject + "turn done");
+                if (BattleManager.instance.needToFinish.Contains(stats))
+                {
+                    BattleManager.instance.needToFinish.Remove(stats);
+                }
                 TurnManager.instance.CheckActions(stats.gameObject);
                 //StartCoroutine(EndMove(stats));
             }
             else if (GameManager.instance.stopped)
             {
-                BattleManager.instance.needToFinish.Add(stats);
+                if (!BattleManager.instance.needToFinish.Contains(stats))
+                {
+                    BattleManager.instance.needToFinish.Add(stats);
+                }
+            }
+        }
+        else if (GameManager.instance.stopped)
+        {
+            foreach(Stats listStats in BattleManager.instance.needToFinish)
+            {
+                StartCoroutine(Movement.instance.EndMove(listStats));
             }
         }
         Debug.Log("12345 SET BOOLS TO FALSE");

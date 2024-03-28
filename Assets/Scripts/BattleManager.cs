@@ -80,6 +80,7 @@ public class BattleManager : MonoBehaviour
 
             Stats playerStats = player.GetComponent<Stats>();
             Stats enemyStats = battleOpponents[0].GetComponent<Stats>();
+            playerStats.inBattle = true;
 
             playerStats.card.SetActive(true);
             enemyStats.card.SetActive(true);
@@ -111,6 +112,7 @@ public class BattleManager : MonoBehaviour
         defender.card.SetActive(true);
         yield return new WaitForSeconds(1f);
         Debug.Log("Take Damage pt 2");
+        AudioManager.instance.PlaySound(AudioManager.instance.audioSources["critSFX"]);
         defender.health -= damage;
         defender.hpText.text = defender.health.ToString();
 
@@ -129,16 +131,18 @@ public class BattleManager : MonoBehaviour
             yield return new WaitForSeconds(0.2f);
         }
         yield return new WaitForSeconds(1);
-        defender.card.SetActive(false);
+        if (!BattleManager.instance.battle)
+        {
+            defender.card.SetActive(false);
+        }
         GameManager.instance.stopped = false;
-        StartCoroutine(Movement.instance.EndMove(attacker));
+        //StartCoroutine(Movement.instance.EndMove(attacker));
         if (!inQueue)
         {
             foreach(Stats stats in needToFinish)
             {
-                Movement.instance.EndMove(stats);
+                StartCoroutine(Movement.instance.EndMove(stats));
             }
-            needToFinish.Clear();
         }
         takingDamage = false;
     }
@@ -157,6 +161,7 @@ public class BattleManager : MonoBehaviour
                 Debug.Log("while");
             }
             attackMade = false;
+            AudioManager.instance.PlaySound(AudioManager.instance.audioSources["fireSFX"]);
         }
         else
         {
@@ -185,6 +190,7 @@ public class BattleManager : MonoBehaviour
         parryButton.SetActive(false);
         if (parried)
         {
+            AudioManager.instance.PlaySound(AudioManager.instance.audioSources["blockSFX"]);
             damage = 0;
             attackText.gameObject.SetActive(true);
             attackText.text = "Parried!";
@@ -193,6 +199,7 @@ public class BattleManager : MonoBehaviour
         }
         else if (triedToParry)
         {
+            AudioManager.instance.PlaySound(AudioManager.instance.audioSources["critSFX"]);
             damage *= 2;
             attackText.gameObject.SetActive(true);
             attackText.text = "Parry Failed!";
@@ -203,6 +210,7 @@ public class BattleManager : MonoBehaviour
         attacker.sword.gameObject.SetActive(false);
         if ((missOrCrit == 1) && (!parried))
         {
+            AudioManager.instance.PlaySound(AudioManager.instance.audioSources["dodgeSFX"]);
             attackText.text = "Miss";
             attackText.gameObject.SetActive(true);
             damage = 0; 
@@ -211,6 +219,7 @@ public class BattleManager : MonoBehaviour
         }
         else if (missOrCrit == 10)
         {
+            AudioManager.instance.PlaySound(AudioManager.instance.audioSources["critSFX"]);
             attackText.text = "Critical Hit!";
             attackText.gameObject.SetActive(true);
             damage *= 2;
@@ -218,17 +227,20 @@ public class BattleManager : MonoBehaviour
             attackText.gameObject.SetActive(false);
         }
         parried = false;
+        AudioManager.instance.PlaySound(AudioManager.instance.audioSources["hitSFX"]);
         defender.health -= damage;
         defender.hpText.text = defender.health.ToString();
         if (defender.health <= 0)
         {
+            AudioManager.instance.PlaySound(AudioManager.instance.audioSources["enemyDeathSFX"]);
             playerAttackScreen.SetActive(false);
             defender.health = 0;
             defender.hpText.text = defender.health.ToString();
             StartCoroutine(AudioManager.instance.AudioFadeOut(AudioManager.instance.audioSources["battleTheme"], 1.5f));
-            yield return new WaitForSeconds(1);
             if (defender.gameObject.tag == "Player")
             {
+                AudioManager.instance.PlaySound(AudioManager.instance.audioSources["gameOverSFX"]);
+                yield return new WaitForSeconds(5);
                 SceneManager.LoadScene("GameOver");
             }
             defender.card.SetActive(false);
@@ -250,7 +262,13 @@ public class BattleManager : MonoBehaviour
                 attacker.card.SetActive(false);
             }
 
-           StartCoroutine(Movement.instance.EndMove(attacker));
+           //StartCoroutine(Movement.instance.EndMove(attacker));
+            foreach(Stats stats in needToFinish)
+            {
+                Movement.instance.EndMove(stats);
+            }
+            attacker.inBattle = false;
+            StartCoroutine(Movement.instance.EndMove(GameManager.instance.playerStats));
         }
         else if (defender.gameObject.tag == "Enemy")
         {

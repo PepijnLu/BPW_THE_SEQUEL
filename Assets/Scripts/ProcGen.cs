@@ -86,11 +86,14 @@ public class ProcGen : MonoBehaviour
         {
             Destroy(orb);
         }
-        UIManager.instance.GenerateMinimap();
+        //UIManager.instance.GenerateMinimap();
+        //UIManager.instance.ChangeImageSprite(0, UIManager.instance.roomImg);
         GetRoomNumbers();
         TurnManager.instance.isPlayerTurn = true;
         playerController.turnStarted = false;
-
+        playerController.gameObject.transform.position = new Vector3(50.5f, 50.5f, 0);
+        playerController.NukeDirections();
+        playerController.CheckForPossibleMovement();
         cards = GameObject.FindGameObjectsWithTag("Card");
         foreach (GameObject card in cards)
         {
@@ -267,6 +270,7 @@ public class ProcGen : MonoBehaviour
                     }
                 }
             }
+            UIManager.instance.FillMinimapBackground();
         }
     
     }
@@ -282,6 +286,7 @@ public class ProcGen : MonoBehaviour
             {
                 //up
                 case 1:
+                    //UIManager.instance.ChangeImageSprite(1, UIManager.instance.roomImg);
                     GenerateRoom(xPos, yPos + length + newSize, newSize, true, direction);
                     //up, 10 long, 3 wide
                     for (int x = 0; x < 500; x++)
@@ -315,6 +320,7 @@ public class ProcGen : MonoBehaviour
 
                 //right
                 case 2:
+                //UIManager.instance.ChangeImageSprite(4, UIManager.instance.roomImg);
                     GenerateRoom(xPos + length + newSize, yPos, newSize, true, direction);
 
                     for (int x = 0; x < 500; x++)
@@ -357,6 +363,7 @@ public class ProcGen : MonoBehaviour
                     //extra room left
                     if ((extraRoom == 1))
                     {
+                        //UIManager.instance.ChangeImageSprite(3, UIManager.instance.roomImg);
                         GenerateRoom(xPos - length - newSize, yPos, newSize, false, 4);
 
                         //up, 10 long, 3 wide
@@ -386,6 +393,7 @@ public class ProcGen : MonoBehaviour
                     //extra room down
                     if ((extraRoom == 1))
                     {
+                        //UIManager.instance.ChangeImageSprite(2, UIManager.instance.roomImg);
                         GenerateRoom(xPos, yPos - length - newSize, newSize, false, 3);
 
                         //up, 10 long, 3 wide

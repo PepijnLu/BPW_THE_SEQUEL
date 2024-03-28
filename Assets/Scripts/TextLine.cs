@@ -11,9 +11,17 @@ public class TextLine : MonoBehaviour
     {
         if (collider.gameObject.tag == "Player")
         {
-            Debug.Log("Collision with player");
-            UIManager.instance.StartShowTextRoutine(textToDisplay, duration, UIManager.instance.tutorialText);
-            gameObject.SetActive(false);
+            StartCoroutine(ShowText());
         }
+    }
+
+    IEnumerator ShowText()
+    {
+        while (!TurnManager.instance.isPlayerTurn)
+        {
+            yield return null;
+        }
+        UIManager.instance.StartShowTextRoutine(textToDisplay, duration, UIManager.instance.tutorialText);
+        gameObject.SetActive(false);
     }
 }

@@ -9,34 +9,35 @@ public class GameManager : MonoBehaviour
         TO DO:
 
         fix:  
-        -something sometimes breaks the turns
         -room 1 doesnt open if there are no enemies inside from the start
+        -minimap
+        -sometimes values dont reset properly while passign turns? probably set again after
 
         add:
-        -FUNCTIONALITY TO CHESTS
         -SOME ITEM/PICKUP FOR THE EXIT 
         -MAKE HALLWAYS INTERESTING
-        -MORE SOUND (Getting hit, dying, reaching the exit)
-        -BALANCING (Playtesting)
+        -NORMALIZED VOLUMES
+        -variety in chest cards
 
         -TUTORIAL:
-            -explain movement
-            -explain turn based system
-            -explain battles
+            -explain battles (parrying)
+
             -explain ranged enemies
-            -explain opening rooms
+
             -explain opening chests
             -explain opening exits
             -explain advancing
             -explain orbs
-            -explain tab
 
-        improve:
-        -CODE        
-        -difficulty scaling
+        IMPROVE:
+        -CODE   
+            -cards dropped by enemies
+            -procedural generation        
+        -difficulty scaling/balancing
 
 
         probably fixed:
+        -something sometimes breaks the turns
         -lock the exit (EASY FIX)
         -4: fix cards and battles happening at the same time (might be a non issue)
         -2: fix broken enemy movement (has a bandaid fix)
@@ -109,6 +110,7 @@ public class GameManager : MonoBehaviour
         ProcGen.instance.collisionMap.SetTile(new Vector3Int(xPos, yPos, 0), null);
         ProcGen.instance.decorationMap.SetTile(new Vector3Int(xPos, yPos, 0), null);
         ProcGen.instance.chestMap.SetTile(new Vector3Int(xPos, yPos, 0), ProcGen.instance.chest);
+        AudioManager.instance.PlaySound(AudioManager.instance.audioSources["openRoomSFX"]);
     }
 
     public void OpenExit(int room)
@@ -118,6 +120,7 @@ public class GameManager : MonoBehaviour
         ProcGen.instance.collisionMap.SetTile(new Vector3Int(xPos, yPos, 0), null);
         ProcGen.instance.decorationMap.SetTile(new Vector3Int(xPos, yPos, 0), null);
         ProcGen.instance.exitMap.SetTile(new Vector3Int(xPos, yPos, 0), ProcGen.instance.exit);
+        AudioManager.instance.PlaySound(AudioManager.instance.audioSources["openRoomSFX"]);
     }
 
     public void OpenRoom(int room)
@@ -128,7 +131,8 @@ public class GameManager : MonoBehaviour
         float direction = ProcGen.instance.mainRoomLocations["mainRoomLocation" + room.ToString()].z;
         float length = ProcGen.instance.mainRoomLengthWidthSize["mainRoomLWS" + room.ToString()].x;
         float width = ProcGen.instance.mainRoomLengthWidthSize["mainRoomLWS" + room.ToString()].y;
-        float roomSize = ProcGen.instance.mainRoomLengthWidthSize["mainRoomLWS" + room.ToString()   ].z;
+        float roomSize = ProcGen.instance.mainRoomLengthWidthSize["mainRoomLWS" + room.ToString()].z;
+        AudioManager.instance.PlaySound(AudioManager.instance.audioSources["openRoomSFX"]);
         GameData.roomsCleared++;
 
         if (direction == 1)

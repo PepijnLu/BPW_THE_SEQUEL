@@ -108,7 +108,7 @@ MonoBehaviour:
   enemyChillTime: 0
   collidingWithEnemy: 0
   square: {fileID: 6747001738009277725, guid: 2d8dd2ea64674394da1fcc370fd2f5d9, type: 3}
-  laser: {fileID: 6661069274899513591, guid: e3c93e3e2e7395f4f939ff98dd410462, type: 3}
+  laser: {fileID: 707753633157840270, guid: e3c93e3e2e7395f4f939ff98dd410462, type: 3}
   up: {fileID: 0}
   down: {fileID: 0}
   left: {fileID: 0}
@@ -121,6 +121,7 @@ MonoBehaviour:
   defender: {fileID: 0}
   blocksSurrounding: 0
   notDoneFiring: 0
+  distanceToPlayer: {x: 0, y: 0}
 --- !u!61 &1706375715158330612
 BoxCollider2D:
   m_ObjectHideFlags: 0

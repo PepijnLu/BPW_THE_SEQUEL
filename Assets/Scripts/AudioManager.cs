@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
-    public AudioSource menuTheme, gameTheme, battleTheme;
+    public AudioSource menuTheme, gameTheme, battleTheme, fireSFX, blockSFX, gameOverSFX, enemyDeathSFX, dodgeSFX, critSFX, exitSFX, chestSFX, pickupSFX, maxOrbSFX, hitSFX, doorUnlockSFX;
     public Dictionary<string, AudioSource> audioSources = new Dictionary<string, AudioSource>();
     public Slider musicSlider, sfxSlider;
 
@@ -17,6 +17,18 @@ public class AudioManager : MonoBehaviour
         audioSources.Add("menuTheme", menuTheme);
         audioSources.Add("gameTheme", gameTheme);
         audioSources.Add("battleTheme", battleTheme);
+        audioSources.Add("fireSFX", fireSFX);
+        audioSources.Add("blockSFX", blockSFX);
+        audioSources.Add("gameOverSFX", gameOverSFX);
+        audioSources.Add("enemyDeathSFX", enemyDeathSFX);
+        audioSources.Add("dodgeSFX", dodgeSFX);
+        audioSources.Add("critSFX", critSFX);
+        audioSources.Add("exitSFX", exitSFX);
+        audioSources.Add("pickupSFX", pickupSFX);
+        audioSources.Add("maxOrbSFX", maxOrbSFX);
+        audioSources.Add("hitSFX", hitSFX);
+        audioSources.Add("openRoomSFX", doorUnlockSFX);
+        audioSources.Add("chestSFX", chestSFX);
     }
 
     void Start()

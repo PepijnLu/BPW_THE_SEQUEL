@@ -17,6 +17,12 @@ public class Laser : MonoBehaviour
     void FixedUpdate()
     {
         transform.Translate(0f, (1f * speed * Time.deltaTime), 0f);
+
+        Vector2 distanceToPlayer = gameObject.transform.position - GameManager.instance.player.transform.position;
+        if (distanceToPlayer.magnitude > 12)
+        {
+            Destroy(gameObject);
+        }
     }
 
     void OnTriggerEnter2D(Collider2D collider)

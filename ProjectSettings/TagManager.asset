@@ -13,6 +13,7 @@ TagManager:
   - Card
   - Chest
   - Orb
+  - ChestCard
   layers:
   - Default
   - TransparentFX

@@ -67,7 +67,7 @@ public class Stats : MonoBehaviour
             cardSlot = GameObject.Find("enemyCardSlot").transform;
             sword = BattleManager.instance.enemySword;
         }
-        if (Tutorial.instance.tutorial && gameObject.tag == "Enemy")
+        if (gameObject.tag == "Enemy")
         {
             SetValues();
         }
@@ -78,7 +78,7 @@ public class Stats : MonoBehaviour
     {
         if (gameObject.tag == "Enemy")
         {
-            if (Tutorial.instance.tutorial)
+            if (Tutorial.instance != null)
             {
                 switch(Tutorial.instance.tutorialEnemiesSpawned)
                 {
@@ -103,7 +103,7 @@ public class Stats : MonoBehaviour
             }
             maxHealth = Random.Range(1, powerLevel + 1);
             damage = Random.Range(1, powerLevel + 1);
-            if (!Tutorial.instance.tutorial)
+            if (Tutorial.instance == null)
             {
                 enemyInt = Random.Range(1, 4);
             }

@@ -61,14 +61,6 @@ public class TurnManager : MonoBehaviour
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
             if (obj.tag == "Player")
             {
-                isPlayerTurn = false;
-                obj.GetComponent<Stats>().moves = 0;
-                Movement.instance.movesRemainingTxt.text = ("Moves remaining: " + (obj.GetComponent<Stats>().moves).ToString());
-            
-                Debug.Log("turn started enemy");
-            }
-            if (obj.tag == "Enemy")
-            {
                 foreach (GameObject enemy in enemies)
                 {
                     Stats enemyStats = enemy.GetComponent<Stats>();
@@ -76,20 +68,20 @@ public class TurnManager : MonoBehaviour
                     enemyStats.moves = 0;
                     enemyStats.turnDone = false;
                     enemy.GetComponent<EnemyController>().turnStarted = false;
-                    //enemy.GetComponent<EnemyController>().CheckForPossibleMovement();
-                    //StartCoroutine(enemy.GetComponent<EnemyController>().EnemyChillTime());
                 }
-                Debug.Log("turn started player");
+
+                isPlayerTurn = false;
+                Movement.instance.movesRemainingTxt.text = ("Moves remaining: " + (obj.GetComponent<Stats>().moves).ToString());
+            
+                Debug.Log("turn started enemy");
+            }
+            if (obj.tag == "Enemy")
+            {
+                GameManager.instance.playerStats.moves = 0;
+                ProcGen.instance.playerController.turnStarted = false;
                 isPlayerTurn = true;
-                GameManager.instance.player.GetComponent<PlayerController>().turnStarted = false;
+                Debug.Log("turn started player");
                 Movement.instance.movesRemainingTxt.text = ("Moves remaining: " + (GameManager.instance.playerStats.maxMoves - GameManager.instance.playerStats.moves).ToString());
-                //GameManager.instance.player.GetComponent<PlayerController>().CheckForPossibleMovement();
-                //StartCoroutine(Movement.instance.EndMove(GameManager.instance.player.GetComponent<Stats>()));
-                // GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-                // foreach (GameObject player in players)
-                // {
-                //     player.GetComponent<PlayerController>().turnStarted = false;
-                // }
             }
     }
 }
