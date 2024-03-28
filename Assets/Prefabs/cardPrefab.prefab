@@ -228,7 +228,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageText: {fileID: 8061693353043959758}
   healthText: {fileID: 3598391070767021132}
-  wordText: {fileID: 0}
+  cardImage: {fileID: 2937304903217391759}
+  iconImage: {fileID: 1271741154748360359}
 --- !u!114 &7873337451517253795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -297,7 +298,7 @@ GameObject:
   - component: {fileID: 7572606459151830938}
   - component: {fileID: 1271741154748360359}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

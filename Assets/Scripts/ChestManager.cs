@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ChestManager : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class ChestManager : MonoBehaviour
     public float cardSize3, cardSize5, cardSize9;
     public GameObject card;
     public bool openingChest;
+    public Sprite icon3, icon5, icon9, card3, card5, card9;
+    public Sprite currentIcon, currentCard;
 
     void Awake()
     {
@@ -20,13 +23,15 @@ public class ChestManager : MonoBehaviour
         openingChest = true;
         GameManager.instance.stopped = true;
         int randomInt = Random.Range(1, 11);
-        if (randomInt < 6) {    GenerateCards(threeCardsTransforms, cardSize3);   }
-        else if (randomInt < 10) {  GenerateCards(fiveCardTransforms, cardSize5);   }
-        else if (randomInt == 10) { GenerateCards(nineCardTransforms, cardSize9);  }
+        if (randomInt < 6) {    GenerateCards(threeCardsTransforms, cardSize3, card3, icon3);   }
+        else if (randomInt < 10) {  GenerateCards(fiveCardTransforms, cardSize5, card5, icon5);   }
+        else if (randomInt == 10) { GenerateCards(nineCardTransforms, cardSize9, card9, icon9);  }
     }
 
-    void GenerateCards(List<Transform> cardTransformList, float cardSize)
+    void GenerateCards(List<Transform> cardTransformList, float cardSize, Sprite cardSprite, Sprite iconSprite)
     {
+        currentCard = cardSprite;
+        currentIcon = iconSprite;
         GameManager.instance.playerStats.card.SetActive(true);
         GameManager.instance.stopped = true;
         foreach (Transform cardTransform in cardTransformList)
@@ -53,10 +58,11 @@ public class ChestManager : MonoBehaviour
         yield return new WaitForSeconds(1);
         GameManager.instance.stopped = false;
         GameManager.instance.playerStats.card.SetActive(false);
-        
+        Vector3Int cellPosition = ProcGen.instance.chestMap.WorldToCell(GameManager.instance.player.transform.position);
+        ProcGen.instance.chestMap.SetTile(cellPosition, null);
         foreach(Stats stats in BattleManager.instance.needToFinish)
         {
-            Movement.instance.EndMove(stats);
+            StartCoroutine(Movement.instance.EndMove(stats));
         }
     }
 }

@@ -41,7 +41,7 @@ public class CanMove : MonoBehaviour
     {
         if ( (collider.gameObject.tag == "Tilemap") || 
              (collider.gameObject.tag == "Arrow") || 
-             (collider.gameObject.tag == "Chest") ||
+             ((collider.gameObject.tag == "Chest") && (!TurnManager.instance.isPlayerTurn)) ||
              ( (collider.gameObject.tag == "Enemy") && ( (collider.gameObject != enemy) && (enemy != null) ) ) )
         {
             if ((enemy != null) && (collider.gameObject.tag == "Tilemap"))

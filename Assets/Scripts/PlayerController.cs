@@ -139,21 +139,21 @@ public class PlayerController : MonoBehaviour
     void PlayerTurn()
     {
         Debug.Log("Player Turn");
-        if (GameManager.instance.stopped == false)
+        if (GameManager.instance.stopped == false && (!UIManager.instance.tutorialTextBox.activeSelf))
         {
-            if (Input.GetKeyDown(KeyCode.W) && up != null)
+            if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && up != null)
             {
                 Movement.instance.MoveTile(1, gameObject, up, down, right, left);
             }
-            if (Input.GetKeyDown(KeyCode.S) && down != null)
+            if ((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) && down != null)
             {
                 Movement.instance.MoveTile(2, gameObject, up, down, right, left);
             }
-            if (Input.GetKeyDown(KeyCode.D ) && right != null)
+            if ((Input.GetKeyDown(KeyCode.D ) || Input.GetKeyDown(KeyCode.RightArrow)) && right != null)
             {
                 Movement.instance.MoveTile(3, gameObject, up, down, right, left);
             }
-            if (Input.GetKeyDown(KeyCode.A) && left != null)
+            if ((Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) && left != null)
             {
                 Movement.instance.MoveTile(4, gameObject, up, down, right, left);
             }
@@ -181,6 +181,7 @@ public class PlayerController : MonoBehaviour
             gameObject.transform.rotation = Quaternion.identity;
             GameData.dungeonsCompleted++;
             //GameData.roomsCleared = 0;
+            UIManager.instance.dungeonsClearedText.text = GameData.dungeonsCompleted.ToString();
             ProcGen.instance.GenerateDungeon();
         }
 
@@ -194,8 +195,6 @@ public class PlayerController : MonoBehaviour
         {
             ChestManager.instance.Open();
             AudioManager.instance.PlaySound(AudioManager.instance.audioSources["chestSFX"]);
-            Vector3Int cellPosition = ProcGen.instance.chestMap.WorldToCell(gameObject.transform.position);
-            ProcGen.instance.chestMap.SetTile(cellPosition, null);
         }
         if (collider.gameObject.tag == "Orb")
         {

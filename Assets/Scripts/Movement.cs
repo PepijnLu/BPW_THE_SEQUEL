@@ -16,7 +16,7 @@ public class Movement : MonoBehaviour
     
     public void MoveTile(int direction, GameObject objectToMove, GameObject up, GameObject down, GameObject right, GameObject left)
     {
-        Debug.Log("MoveTile" + direction);
+        Debug.Log("EnemyMove: " + objectToMove.tag);
         Vector3 oldPosition = objectToMove.transform.position;
         Vector3 newPosition = new Vector3(0, 0, 0);
         bool moved = false;
@@ -130,6 +130,7 @@ public class Movement : MonoBehaviour
 
     public IEnumerator EndMove(Stats stats)
     {
+        Debug.Log("EnemyMove: end move: " + stats.gameObject.tag);
         if ( (stats.moves >= stats.maxMoves) && GameManager.instance.stopped == false)
         {
             if (stats.gameObject.tag == "Player" && TurnManager.instance.isPlayerTurn)
@@ -151,7 +152,8 @@ public class Movement : MonoBehaviour
                 {
                     Vector2 distanceToPlayer = (stats.gameObject.transform.position - GameManager.instance.player.transform.position);
                     stats.fired = true;
-                    if (distanceToPlayer.magnitude < 10)
+                    Debug.Log("fire attempt at: " + distanceToPlayer.magnitude);
+                    if ((distanceToPlayer.magnitude < 8) && (distanceToPlayer.magnitude > 1.5))
                     {
                         StartCoroutine(enemyController.FireLaser());
                         while (enemyController.notDoneFiring)
@@ -180,7 +182,7 @@ public class Movement : MonoBehaviour
                 }
             }
         }
-        else if (GameManager.instance.stopped)
+        else if (!GameManager.instance.stopped)
         {
             foreach(Stats listStats in BattleManager.instance.needToFinish)
             {

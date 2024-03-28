@@ -6,8 +6,9 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour
 {
-    public TextMeshProUGUI damageText, healthText, wordText;
+    public TextMeshProUGUI damageText, healthText;
     int damage, health;
+    public Image cardImage, iconImage;
 
     void Start()
     {
@@ -24,6 +25,9 @@ public class Card : MonoBehaviour
             health = Random.Range(1, GameData.roomsCleared);
             damageText.text = ("+" + damage.ToString());
             healthText.text = ("+" + health.ToString());
+
+            cardImage.sprite = ChestManager.instance.currentCard;
+            iconImage.sprite = ChestManager.instance.currentIcon;
         }
         else
         {
@@ -38,7 +42,7 @@ public class Card : MonoBehaviour
         GameManager.instance.playerStats.maxHealth += health;
         GameManager.instance.playerStats.damage += damage;
         GameManager.instance.playerStats.damageText.text = GameManager.instance.playerStats.damage.ToString();
-        GameManager.instance.playerStats.hpText.text = GameManager.instance.playerStats.damage.ToString();
+        GameManager.instance.playerStats.hpText.text = GameManager.instance.playerStats.health.ToString();
         ChestManager.instance.CheckCards();
         Destroy(gameObject);
     }

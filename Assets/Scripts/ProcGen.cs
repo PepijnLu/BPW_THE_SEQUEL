@@ -16,7 +16,7 @@ public class ProcGen : MonoBehaviour
     private int[,] map;
     int x, y;
     //NOTE: EXTRA ROOMS ARE GENERATED BACK TO FRONT. LAST EXTRA ROOM IS EXTRA ROOM 1
-    [SerializeField] int mainRoomAmount, extraRoomAmount;
+    [SerializeField] int mainRoomAmount, extraRoomAmount, hallwayAmount;
     public int maxMainRooms, maxExtraRooms;
     public int minRoomSize, maxRoomSize, minHallwayLength, maxHallwayLength, minHallwayWidth, maxHallwayWidth, enemySpawnChance, blockSpawnChance, orbSpawnChance;
     int previousX, previousY, previousSize;
@@ -25,7 +25,8 @@ public class ProcGen : MonoBehaviour
     public Dictionary<string, int> enemiesPerRoom = new Dictionary<string, int>();
     public Dictionary<string, Vector3> mainRoomLocations = new Dictionary<string, Vector3>();
     public Dictionary<string, Vector3> mainRoomLengthWidthSize = new Dictionary<string, Vector3>();
-    public Dictionary<string, Vector2> extraRoomLocations = new Dictionary<string, Vector2>();
+    public Dictionary<string, Vector3> extraRoomLocations = new Dictionary<string, Vector3>();
+    public Dictionary<string, Vector3> extraRoomLengthWidthSize = new Dictionary<string, Vector3>();
 
     void Awake()
     {
@@ -36,7 +37,7 @@ public class ProcGen : MonoBehaviour
     {
         normalTilemaps = new List<Tilemap>(){tilemap, collisionMap, exitMap, chestMap, decorationMap, rubbleMap};
         tutorialTilemaps = new List<Tilemap>(){tutorialGround, tutorialCollision, tutorialChest, tutorialExit};
-        //GetRoomNumbers();
+        GetRoomNumbers();
     }
 
     // Update is called once per frame
@@ -50,21 +51,18 @@ public class ProcGen : MonoBehaviour
 
     public void GenerateDungeon()
     {
+        GameManager.instance.generatingDungeon = true;
         previousSize = 0;
         previousX = 0;
         previousY = 0;
         mainRoomAmount = 0;
         extraRoomAmount = 0;
+        hallwayAmount = 0;
         enemiesPerRoom.Clear();
         mainRoomLocations.Clear();
         mainRoomLengthWidthSize.Clear();
         extraRoomLocations.Clear();
-        // collisionMap.ClearAllTiles();
-        // tilemap.ClearAllTiles();
-        // exitMap.ClearAllTiles();
-        // decorationMap.ClearAllTiles();
-        // chestMap.ClearAllTiles();
-        // rubbleMap.ClearAllTiles();
+        extraRoomLengthWidthSize.Clear();
         foreach (Tilemap tmp in normalTilemaps)
         {
             tmp.ClearAllTiles();
@@ -99,6 +97,8 @@ public class ProcGen : MonoBehaviour
         {
             card.SetActive(false);
         }
+        OpenEmptyRooms();
+        GameManager.instance.generatingDungeon = false;
     }
     void GetRoomNumbers()
     {
@@ -123,6 +123,33 @@ public class ProcGen : MonoBehaviour
             previousY = yLocation;
 
             GenerateRoom(xLocation, yLocation, size, true, 0);
+        }
+    }
+
+    public void OpenEmptyRooms()
+    {
+        if (((hallwayAmount + 1) == (maxMainRooms + maxExtraRooms)) && (!clearedRooms))
+        {
+            clearedRooms = true;
+            foreach (KeyValuePair<string, int> pair in enemiesPerRoom)
+            {
+                int enemies = pair.Value;
+                if ( (enemies <= 0) && (pair.Key.Contains("MainRoom")))
+                {
+                    string numericPart = pair.Key.Substring("enemiesMainRoom".Length);
+                    if (int.TryParse(numericPart, out int roomNumber))
+                    {
+                        if (roomNumber == maxMainRooms)
+                        {
+                            GameManager.instance.OpenExit(roomNumber);
+                        }
+                        else
+                        {   
+                            GameManager.instance.OpenRoom(roomNumber);
+                        }
+                    }
+                }
+            }
         }
     }
     
@@ -232,6 +259,7 @@ public class ProcGen : MonoBehaviour
         {   
             enemiesPerRoom.Add(("enemiesExtraRoom" + extraRoomAmount.ToString()), enemiesInRoom);
             extraRoomLocations.Add(("extraRoomLocation" + extraRoomAmount.ToString()), new Vector3(xLoc, yLoc));
+            extraRoomLengthWidthSize.Add(("extraRoomLWS" + extraRoomAmount.ToString()), new Vector3(length, width, size));
 
             //LOCK THE CHEST
             decorationMap.SetTile(new Vector3Int(xLoc, yLoc, 0), lockTile);
@@ -247,32 +275,6 @@ public class ProcGen : MonoBehaviour
         {
             GenerateHallway(direction, width, xLoc, yLoc, size, makeExtra, prevDir, newSize, length);
         }
-
-        if ( (extraRoomAmount == maxExtraRooms) && (!clearedRooms))
-        {
-            clearedRooms = true;
-            foreach (KeyValuePair<string, int> pair in enemiesPerRoom)
-            {
-                int enemies = pair.Value;
-                if ( (enemies <= 0) && (pair.Key.Contains("MainRoom")))
-                {
-                    string numericPart = pair.Key.Substring("enemiesMainRoom".Length);
-                    if (int.TryParse(numericPart, out int roomNumber))
-                    {
-                        if (roomNumber == maxMainRooms)
-                        {
-                            GameManager.instance.OpenExit(roomNumber);
-                        }
-                        else
-                        {   
-                            GameManager.instance.OpenRoom(roomNumber);
-                        }
-                    }
-                }
-            }
-            UIManager.instance.FillMinimapBackground();
-        }
-    
     }
         
 
@@ -286,6 +288,7 @@ public class ProcGen : MonoBehaviour
             {
                 //up
                 case 1:
+                    hallwayAmount++;
                     //UIManager.instance.ChangeImageSprite(1, UIManager.instance.roomImg);
                     GenerateRoom(xPos, yPos + length + newSize, newSize, true, direction);
                     //up, 10 long, 3 wide
@@ -320,6 +323,7 @@ public class ProcGen : MonoBehaviour
 
                 //right
                 case 2:
+                hallwayAmount++;
                 //UIManager.instance.ChangeImageSprite(4, UIManager.instance.roomImg);
                     GenerateRoom(xPos + length + newSize, yPos, newSize, true, direction);
 
@@ -360,6 +364,7 @@ public class ProcGen : MonoBehaviour
            switch(prevDir)
             {
                 case 1:
+                    hallwayAmount++;
                     //extra room left
                     if ((extraRoom == 1))
                     {
@@ -390,6 +395,7 @@ public class ProcGen : MonoBehaviour
                     break;
 
                 case 2:
+                    hallwayAmount++;
                     //extra room down
                     if ((extraRoom == 1))
                     {
@@ -420,6 +426,5 @@ public class ProcGen : MonoBehaviour
                     break;
             } 
         }
-
     }
 }

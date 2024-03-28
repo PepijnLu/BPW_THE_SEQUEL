@@ -118,6 +118,7 @@ public class BattleManager : MonoBehaviour
 
         if (defender.health <= 0)
         {
+            Debug.Log("Defender dead");
             playerAttackScreen.SetActive(false);
             defender.health = 0;
             defender.hpText.text = defender.health.ToString();
@@ -136,7 +137,7 @@ public class BattleManager : MonoBehaviour
             defender.card.SetActive(false);
         }
         GameManager.instance.stopped = false;
-        //StartCoroutine(Movement.instance.EndMove(attacker));
+        StartCoroutine(Movement.instance.EndMove(attacker));
         if (!inQueue)
         {
             foreach(Stats stats in needToFinish)
@@ -228,10 +229,15 @@ public class BattleManager : MonoBehaviour
         }
         parried = false;
         AudioManager.instance.PlaySound(AudioManager.instance.audioSources["hitSFX"]);
+        if (Tutorial.instance != null)
+        {
+            if (Tutorial.instance.tutorialPhase == 3) {damage = 0;}
+        }
         defender.health -= damage;
         defender.hpText.text = defender.health.ToString();
         if (defender.health <= 0)
         {
+            Debug.Log("Defender dead");
             AudioManager.instance.PlaySound(AudioManager.instance.audioSources["enemyDeathSFX"]);
             playerAttackScreen.SetActive(false);
             defender.health = 0;
@@ -250,6 +256,7 @@ public class BattleManager : MonoBehaviour
             yield return new WaitForSeconds(0.2f);
             if(battleOpponents.Count > 0)
             {
+                GameManager.instance.stopped = false;
                 Battle(attacker.gameObject, battleOpponents[0], false, false);
             }
             else
@@ -265,10 +272,10 @@ public class BattleManager : MonoBehaviour
            //StartCoroutine(Movement.instance.EndMove(attacker));
             foreach(Stats stats in needToFinish)
             {
-                Movement.instance.EndMove(stats);
+                StartCoroutine(Movement.instance.EndMove(stats));
             }
             attacker.inBattle = false;
-            StartCoroutine(Movement.instance.EndMove(GameManager.instance.playerStats));
+            //StartCoroutine(Movement.instance.EndMove(GameManager.instance.playerStats));
         }
         else if (defender.gameObject.tag == "Enemy")
         {

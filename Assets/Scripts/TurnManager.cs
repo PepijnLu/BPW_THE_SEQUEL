@@ -21,15 +21,16 @@ public class TurnManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        // if (Input.GetKeyDown(KeyCode.Space))
-        // {
-        //     isPlayerTurn = true;
-        //     playerController.turnStarted = false;
-        //     GameManager.instance.player.GetComponent<PlayerController>().CheckForPossibleMovement();
-        // }
-        
+        if (!isPlayerTurn && GameManager.instance.enemies.Count <= 0)
+        {
+            GameManager.instance.playerStats.moves = 0;
+            ProcGen.instance.playerController.turnStarted = false;
+            isPlayerTurn = true;
+            Debug.Log("turn started player");
+            Movement.instance.movesRemainingTxt.text = ("Moves remaining: " + (GameManager.instance.playerStats.maxMoves - GameManager.instance.playerStats.moves).ToString());
+        }
     }
 
     public void CheckActions(GameObject obj)
@@ -39,7 +40,6 @@ public class TurnManager : MonoBehaviour
         {
             if ( (obj.GetComponent<Stats>().turnDone == true) && (PickupManager.instance.selecting == false))
             {
-                obj.GetComponent<Stats>().turnDone = false;
                 SwapTurns(obj);
                 Debug.Log("swap to enemy");
             }
@@ -77,6 +77,7 @@ public class TurnManager : MonoBehaviour
             }
             if (obj.tag == "Enemy")
             {
+                GameManager.instance.playerStats.turnDone = false;
                 GameManager.instance.playerStats.moves = 0;
                 ProcGen.instance.playerController.turnStarted = false;
                 isPlayerTurn = true;

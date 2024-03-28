@@ -30,14 +30,14 @@ public class Stats : MonoBehaviour
         if (gameObject.tag == "Player")
         {
             card = Instantiate(cardPrefab, BattleManager.instance.playerCardSlot.position, Quaternion.identity);
-            card.transform.SetParent(GameObject.Find("Canvas").transform);
+            card.transform.SetParent(GameObject.Find("Cards").transform);
             card.transform.position = BattleManager.instance.playerCardSlot.position;
             card.SetActive(false);
         }
         if (gameObject.tag == "Enemy")
         {
             card = Instantiate(cardPrefab, BattleManager.instance.enemyCardSlot.position, Quaternion.identity);
-            card.transform.SetParent(GameObject.Find("Canvas").transform);
+            card.transform.SetParent(GameObject.Find("Cards").transform);
             card.transform.position = BattleManager.instance.enemyCardSlot.position;
             card.SetActive(false);
         }
@@ -89,6 +89,22 @@ public class Stats : MonoBehaviour
                     case 2:
                         powerLevel = 2;
                         enemyInt = 1;
+                        break;
+                    case 3:
+                        powerLevel = 2;
+                        enemyInt = 1;
+                        break;
+                    case 4:
+                        powerLevel = 1;
+                        enemyInt = 2;
+                        break;
+                    case 5:
+                        powerLevel = 3;
+                        enemyInt = 1;
+                        break;
+                    case 6:
+                        powerLevel = 1;
+                        enemyInt = 3;
                         break;
                 }
 

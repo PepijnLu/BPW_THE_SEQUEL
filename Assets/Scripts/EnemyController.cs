@@ -111,45 +111,61 @@ public class EnemyController : MonoBehaviour
 
     public void EnemyMove()
     {
+        Debug.Log("Start void enemy move");
+        bool succesfullyMovedLocal = false;
+        Debug.Log("EnemyMove: enemymove");
         if (!enemyStats.inBattle)
         {
             distanceToPlayer = (gameObject.transform.position - GameManager.instance.player.transform.position);
-            Debug.Log("EnemyMove");
+            Vector2 distanceToCenterRoom = new Vector2(0, 0);
+            float roomSizeToCheck = 0;
+            if (enemyStats.mainRoomInt != 0)
+            {
+                distanceToCenterRoom = (gameObject.transform.position - ProcGen.instance.mainRoomLocations[("mainRoomLocation" + enemyStats.mainRoomInt.ToString())]);
+                roomSizeToCheck = ProcGen.instance.mainRoomLengthWidthSize[(("mainRoomLWS") + enemyStats.mainRoomInt.ToString())].z;
+            }
+            else if (enemyStats.extraRoomInt != 0)
+            {
+                distanceToCenterRoom = (gameObject.transform.position - ProcGen.instance.extraRoomLocations[("extraRoomLocation" + enemyStats.extraRoomInt.ToString())]);
+                roomSizeToCheck = ProcGen.instance.extraRoomLengthWidthSize[(("extraRoomLWS") + enemyStats.extraRoomInt.ToString())].z;
+            }
             succesfullyMoved = false;
             //randomDirection = Random.Range(1, 5);
             CalculateDirection();
 
             for (int i = 0; i < 4; i++)
             {
-                if (enemyStats.enemyInt == 3)
+                if ((enemyStats.enemyInt == 3) && (distanceToPlayer.magnitude < 5))
                 {
-                    if ( (directionsGO[directions[directions.Count - 1 - i] - 1] != null) && (succesfullyMoved == false) && (distanceToPlayer.magnitude < 20))
+                    if ( (directionsGO[directions[directions.Count - 1 - i] - 1] != null) && (succesfullyMovedLocal == false) /* && (distanceToPlayer.magnitude < 10) && ((roomSizeToCheck == 0) || (distanceToCenterRoom.magnitude < roomSizeToCheck - 2))*/ )
                     {
+                        //Debug.Log("EnemyMove: LaserEnemy");
                         Movement.instance.MoveTile(directions[(directions.Count - 1 - i)], gameObject, up, down, right, left);
-                        succesfullyMoved = true;
-                        Debug.Log("EnemyMoveSomewhere");
+                        succesfullyMovedLocal = true;
                     }
                 }
                 else
                 {
-                    if ( (directionsGO[directions[i] - 1] != null) && (succesfullyMoved == false) && (distanceToPlayer.magnitude < 20))
+                    if ( (directionsGO[directions[i] - 1] != null) && (succesfullyMovedLocal == false) /* && (distanceToPlayer.magnitude < 10) && ((roomSizeToCheck == 0) || (distanceToCenterRoom.magnitude < roomSizeToCheck - 2))*/ )
                     {
+                        //Debug.Log("EnemyMove: NormalEnemy");
                         Movement.instance.MoveTile(directions[i], gameObject, up, down, right, left);
-                        succesfullyMoved = true;
-                        Debug.Log("EnemyMoveSomewhere");
+                        succesfullyMovedLocal = true;
                     }
                 }
             }
 
-            if ((succesfullyMoved == false))
+            if (succesfullyMovedLocal == false)
             {
-                enemyStats.moves++;
-                succesfullyMoved = true;
+                //enemyStats.moves++;
+                succesfullyMovedLocal = true;
                 //TurnManager.instance.CheckActions(gameObject);
                 Movement.instance.MoveTile(0, gameObject, up, down, right, left);
-                Debug.Log("the other ones");
             }
+            Debug.Log("succesfullyMoved: " + succesfullyMovedLocal);
         }
+        Debug.Log("succesfullyMoved: " + succesfullyMovedLocal);
+        Debug.Log("End void enemy move");
     }
 
     void CalculateDirection()
@@ -267,9 +283,9 @@ public class EnemyController : MonoBehaviour
     void OnDisable()
     {
         GenerateLoot();
+        GameManager.instance.enemies.Remove(gameObject);
         if (!Tutorial.instance)
         {
-            GameManager.instance.enemies.Remove(gameObject);
             GameManager.instance.EnemyDeath(enemyStats.mainRoomInt, enemyStats.extraRoomInt);
             Debug.Log("RIP");
         }
@@ -281,13 +297,14 @@ public class EnemyController : MonoBehaviour
 
     void GenerateLoot()
     {
-        //int lootInt = Random.Range(1, 4);
-        int lootInt = 1;
+        int lootInt = Random.Range(1, 4);
+        //int lootInt = 1;
+        Debug.Log("tutorial instance: " + Tutorial.instance);
         if (Tutorial.instance != null)
         {
             if (lootInt == 1)
             {
-                if(Tutorial.instance.tutorial  && (Tutorial.instance.tutorialEnemiesSpawned != 2))
+                if(Tutorial.instance.tutorial  && (Tutorial.instance.tutorialPhase != 2))
                 {
                     //nothing
                 }
@@ -309,14 +326,14 @@ public class EnemyController : MonoBehaviour
 
     void OnMouseEnter()
     {
-        if ((GameManager.instance.stopped == false) || (Tutorial.instance.tutorial))
+        if ((GameManager.instance.stopped == false) || (Tutorial.instance == true))
         {
             gameObject.GetComponent<Stats>().card.SetActive(true);
         }
     }
     void OnMouseExit()
     {
-        if (GameManager.instance.stopped == false || (Tutorial.instance.tutorial))
+        if (GameManager.instance.stopped == false || (Tutorial.instance == true))
         {
             gameObject.GetComponent<Stats>().card.SetActive(false);
         }

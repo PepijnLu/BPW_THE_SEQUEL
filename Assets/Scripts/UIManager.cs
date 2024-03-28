@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
-    public TextMeshProUGUI tutorialText, tutorialCornerText;
+    public TextMeshProUGUI tutorialText, tutorialCornerText, dungeonsClearedText;
     public Image minimapSquare;
     public List<Image> minimapSquares;
     public Transform minimapStart;
@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
     public float sizeFloat;
     public Sprite roomImg, hallwayImg, minimapImg;
     public int lastChangedImage;
+    public GameObject tutorialTextBox, tutorialCornerTextBox;
 
     void Awake()
     {
@@ -34,14 +35,21 @@ public class UIManager : MonoBehaviour
     public IEnumerator ShowTextForDuration(string text, float duration, TextMeshProUGUI textToWriteTo)
     {
         Debug.Log("show text: " + text);
-        GameManager.instance.stopped = true;
+        //GameManager.instance.stopped = true;
+        tutorialTextBox.SetActive(true);
         textToWriteTo.gameObject.SetActive(true);
         textToWriteTo.text = text;
         yield return new WaitForSeconds(duration);
         textToWriteTo.text = "";
         textToWriteTo.gameObject.SetActive(false);
+        tutorialTextBox.SetActive(false);
+        tutorialCornerTextBox.SetActive(true);
         tutorialCornerText.text = text;
-        GameManager.instance.stopped = false;
+        //GameManager.instance.stopped = false;
+        foreach(Stats stats in BattleManager.instance.needToFinish)
+        {
+            StartCoroutine(Movement.instance.EndMove(stats));
+        }
     }
 
     public void GenerateMinimap()

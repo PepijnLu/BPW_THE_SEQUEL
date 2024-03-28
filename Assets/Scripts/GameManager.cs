@@ -9,25 +9,16 @@ public class GameManager : MonoBehaviour
         TO DO:
 
         fix:  
-        -room 1 doesnt open if there are no enemies inside from the start
-        -minimap
-        -sometimes values dont reset properly while passign turns? probably set again after
+        -no enemies turn doesnt pass
+        -laser enemies sometimes dont fire
 
         add:
-        -SOME ITEM/PICKUP FOR THE EXIT 
         -MAKE HALLWAYS INTERESTING
-        -NORMALIZED VOLUMES
-        -variety in chest cards
 
         -TUTORIAL:
-            -explain battles (parrying)
-
             -explain ranged enemies
 
-            -explain opening chests
             -explain opening exits
-            -explain advancing
-            -explain orbs
 
         IMPROVE:
         -CODE   
@@ -56,6 +47,7 @@ public class GameManager : MonoBehaviour
     public Stats playerStats;
     public Sprite arrow;
     public TextMeshProUGUI orbText;
+    public bool generatingDungeon;
     void Awake()
     {
         instance = this;
@@ -80,25 +72,34 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-
     public void EnemyDeath(int mainRoomInt, int extraRoomInt)
     {
-        if (mainRoomInt != 0)
+        if (!generatingDungeon)
         {
-            ProcGen.instance.enemiesPerRoom["enemiesMainRoom" + mainRoomInt.ToString()]--;
-            if (ProcGen.instance.enemiesPerRoom["enemiesMainRoom" + mainRoomInt.ToString()] == 0)
+            if (mainRoomInt != 0)
             {
-                Debug.Log("All enemies dead main room " + mainRoomInt);
-                OpenRoom(mainRoomInt);
+                ProcGen.instance.enemiesPerRoom["enemiesMainRoom" + mainRoomInt.ToString()]--;
+                if (ProcGen.instance.enemiesPerRoom["enemiesMainRoom" + mainRoomInt.ToString()] == 0)
+                {
+                    if (mainRoomInt < ProcGen.instance.maxMainRooms)
+                    {
+                        Debug.Log("All enemies dead main room " + mainRoomInt);
+                        OpenRoom(mainRoomInt);
+                    }
+                    else
+                    {
+                        OpenExit(mainRoomInt);
+                    }
+                }
             }
-        }
-        else
-        {
-            ProcGen.instance.enemiesPerRoom["enemiesExtraRoom" + extraRoomInt.ToString()]--;
-            if (ProcGen.instance.enemiesPerRoom["enemiesExtraRoom" + extraRoomInt.ToString()] == 0)
+            else
             {
-                Debug.Log("All enemies dead extra room " + extraRoomInt);
-                OpenChest(extraRoomInt);
+                ProcGen.instance.enemiesPerRoom["enemiesExtraRoom" + extraRoomInt.ToString()]--;
+                if (ProcGen.instance.enemiesPerRoom["enemiesExtraRoom" + extraRoomInt.ToString()] == 0)
+                {
+                    Debug.Log("All enemies dead extra room " + extraRoomInt);
+                    OpenChest(extraRoomInt);
+                }
             }
         }
     }
@@ -115,11 +116,12 @@ public class GameManager : MonoBehaviour
 
     public void OpenExit(int room)
     {
-        int xPos = Mathf.RoundToInt(ProcGen.instance.mainRoomLocations["mainRoomLocation" + room.ToString()].x);
-        int yPos = Mathf.RoundToInt(ProcGen.instance.mainRoomLocations["mainRoomLocation" + room.ToString()].y);
-        ProcGen.instance.collisionMap.SetTile(new Vector3Int(xPos, yPos, 0), null);
-        ProcGen.instance.decorationMap.SetTile(new Vector3Int(xPos, yPos, 0), null);
-        ProcGen.instance.exitMap.SetTile(new Vector3Int(xPos, yPos, 0), ProcGen.instance.exit);
+        Vector3Int exitLocation = ProcGen.instance.collisionMap.WorldToCell(ProcGen.instance.mainRoomLocations["mainRoomLocation" + room.ToString()]);
+        // int xPos = Mathf.RoundToInt(ProcGen.instance.mainRoomLocations["mainRoomLocation" + room.ToString()].x);
+        // int yPos = Mathf.RoundToInt(ProcGen.instance.mainRoomLocations["mainRoomLocation" + room.ToString()].y);
+        ProcGen.instance.collisionMap.SetTile(exitLocation, null);
+        ProcGen.instance.decorationMap.SetTile(exitLocation, null);
+        ProcGen.instance.exitMap.SetTile(exitLocation, ProcGen.instance.exit);
         AudioManager.instance.PlaySound(AudioManager.instance.audioSources["openRoomSFX"]);
     }
 
