@@ -8,16 +8,13 @@ public class TurnManager : MonoBehaviour
     public bool isPlayerTurn, manuallyPassed;
     public PlayerController playerController;
     public int enemiesTurnDone;
+    bool failSafe;
     void Awake()
     {
         isPlayerTurn = true;
         instance = this;
     }
     // Start is called before the first frame update
-    void Start()
-    {
-
-    }
 
     // Update is called once per frame
     void FixedUpdate()
@@ -32,8 +29,34 @@ public class TurnManager : MonoBehaviour
         {
             PassToPlayer();
         }
+
+        if ((!TurnManager.instance.isPlayerTurn) && (!failSafe))
+        {
+            StartCoroutine(EnemyTurnFailSafe());
+        }
     }
 
+    IEnumerator EnemyTurnFailSafe()
+    {
+        failSafe = true;
+        bool broken = false;
+        float duration = 0f;
+        while (duration < 5)
+        {
+            duration += Time.deltaTime;
+            if (GameManager.instance.stopped)
+            {
+                broken = true;
+                break;
+            }
+            yield return null;
+        }
+        if (!broken)
+        {
+            PassToPlayer();
+        }
+        failSafe = false;
+    }
     public void CheckActions(GameObject obj)
     {
         if ( (obj.tag == "Player") )
@@ -61,7 +84,7 @@ public class TurnManager : MonoBehaviour
         //Pass the turn to the enemy
         if (obj.tag == "Player")
         {
-            PassToEnemy(obj);
+            PassToEnemy();
         }
         if (obj.tag == "Enemy")
         {
@@ -85,7 +108,7 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    public void PassToEnemy(GameObject obj)
+    public void PassToEnemy()
     {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         foreach (GameObject enemy in enemies)
@@ -98,7 +121,7 @@ public class TurnManager : MonoBehaviour
         }
 
         isPlayerTurn = false;
-        Movement.instance.movesRemainingTxt.text = ("Moves remaining: " + (obj.GetComponent<Stats>().moves).ToString());
+        Movement.instance.movesRemainingTxt.text = ("Moves remaining: " + 0);
         Debug.Log("turn started enemy");
     }
 }

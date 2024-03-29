@@ -1123,9 +1123,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayerTurn: 0
+  manuallyPassed: 0
   playerController: {fileID: 1776172923}
   enemiesTurnDone: 0
-  manuallyPassed: 0
 --- !u!4 &170272085
 Transform:
   m_ObjectHideFlags: 0
@@ -13537,8 +13537,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stopped: 0
-  cards: {fileID: 1369760268}
   enemies: []
+  cards: {fileID: 1369760268}
   player: {fileID: 1776172922}
   settingsMenu: {fileID: 1374327068}
   playerStats: {fileID: 1776172928}
@@ -18320,21 +18320,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerCardSlot: {fileID: 2042088438}
   enemyCardSlot: {fileID: 860410850}
-  battle: 0
   battleOpponents: []
   needToFinish: []
   playerSword: {fileID: 550085371}
   enemySword: {fileID: 1542429864}
+  battle: 0
   attackMade: 0
   parryable: 0
   parried: 0
   triedToParry: 0
+  takingDamage: 0
   playerAttackScreen: {fileID: 2056574024}
   attackButton: {fileID: 1471439088}
   parryButton: {fileID: 781025294}
   attackText: {fileID: 547505392}
   distanceBetween: 0
-  takingDamage: 0
 --- !u!4 &1759580171
 Transform:
   m_ObjectHideFlags: 0
@@ -34420,7 +34420,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4518490291090679817, guid: 53b43e11b5c989b41b48d590786fd19f, type: 3}
       propertyPath: maxHealth
-      value: 5
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7132058843534121924, guid: 53b43e11b5c989b41b48d590786fd19f, type: 3}
       propertyPath: m_Name
