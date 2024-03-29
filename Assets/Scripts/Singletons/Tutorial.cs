@@ -12,12 +12,7 @@ public class Tutorial : MonoBehaviour
     public Transform boxedEnemy, tutorialExitLocation;
     public Tilemap tutorialGroundMap, tutorialCollisionMap, tutorialDecorationMap, tutorialChestMap, tutorialExitMap;
     public int tutorialPhase;
-
-    /* 
-    -assign tutorial ground map
-    -fix ranged enemy
-    */
-
+    
     // Start is called before the first frame update
     void Awake()
     {

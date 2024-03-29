@@ -177,7 +177,6 @@ public class PlayerController : MonoBehaviour
             gameObject.transform.position = new Vector2(50.5f, 50.5f);
             gameObject.transform.rotation = Quaternion.identity;
             GameData.dungeonsCompleted++;
-            //GameData.roomsCleared = 0;
             UIManager.instance.dungeonsClearedText.text = GameData.dungeonsCompleted.ToString();
             ProcGen.instance.GenerateDungeon();
         }

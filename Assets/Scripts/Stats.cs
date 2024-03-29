@@ -119,7 +119,7 @@ public class Stats : MonoBehaviour
             }
             else
             {
-                powerLevel = Mathf.FloorToInt((mainRoomInt * 1.5f * 1.5f) + (GameData.roomsCleared * 1.5f));
+                powerLevel = Mathf.FloorToInt((mainRoomInt * 1.5f) + (GameData.roomsCleared * 1.5f));
             }
             maxHealth = Random.Range(1, powerLevel + 1);
             damage = Random.Range(1, powerLevel + 1);

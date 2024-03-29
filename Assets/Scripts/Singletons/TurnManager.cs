@@ -29,8 +29,7 @@ public class TurnManager : MonoBehaviour
         {
             PassToPlayer();
         }
-
-        if ((!TurnManager.instance.isPlayerTurn) && (!failSafe))
+        if ((!TurnManager.instance.isPlayerTurn) && (!failSafe) && (Tutorial.instance == null))
         {
             StartCoroutine(EnemyTurnFailSafe());
         }
@@ -41,7 +40,7 @@ public class TurnManager : MonoBehaviour
         failSafe = true;
         bool broken = false;
         float duration = 0f;
-        while (duration < 5)
+        while (duration < 10)
         {
             duration += Time.deltaTime;
             if (GameManager.instance.stopped)
