@@ -29,10 +29,6 @@ public class Card : MonoBehaviour
             cardImage.sprite = ChestManager.instance.currentCard;
             iconImage.sprite = ChestManager.instance.currentIcon;
         }
-        else
-        {
-
-        }
     }
 
     public void WhenClicked()

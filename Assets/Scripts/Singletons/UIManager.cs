@@ -13,8 +13,7 @@ public class UIManager : MonoBehaviour
     public Transform minimapStart;
     [SerializeField] Vector3 minimapOffset;
     public GameObject canvas;
-    public float offsetFloat;
-    public float sizeFloat;
+    public float offsetFloat, sizeFloat; 
     public Sprite roomImg, hallwayImg, minimapImg;
     public int lastChangedImage;
     public GameObject tutorialTextBox, tutorialCornerTextBox;

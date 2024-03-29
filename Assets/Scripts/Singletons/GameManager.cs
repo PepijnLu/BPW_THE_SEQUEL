@@ -5,43 +5,10 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 { 
-    /*
-        TO DO:
-
-        fix:  
-        -enemies next to walls cant move
-
-        add:
-        -MAKE HALLWAYS INTERESTING
-
-        -TUTORIAL:
-            -explain ranged enemies
-
-            -explain opening exits
-
-        IMPROVE:
-        -CODE   
-            -cards dropped by enemies
-            -procedural generation        
-        -difficulty scaling/balancing
-
-
-        probably fixed:
-        -something sometimes breaks the turns
-        -lock the exit (EASY FIX)
-        -4: fix cards and battles happening at the same time (might be a non issue)
-        -2: fix broken enemy movement (has a bandaid fix)
-        -1: make it so that multiple enemies can not be on the same square
-        -enemies spawning in you (easy fix)
-        -multiple move enemies will break when they cant move in every direction (think its fixed?)
-        -enemies can theoretically get completely stuck in blocks (uhhhhh)
-        -combat with multiple enemies at once breaks   
-    */
     public static GameManager instance;
     public bool stopped;
-    public GameObject cards;
     public List<GameObject> enemies;
-    public GameObject player, settingsMenu;
+    public GameObject cards, player, settingsMenu;
     bool paused;
     public Stats playerStats;
     public Sprite arrow;
@@ -55,6 +22,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        //Open settings menu
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (!paused)
@@ -73,6 +41,7 @@ public class GameManager : MonoBehaviour
     }
     public void EnemyDeath(int mainRoomInt, int extraRoomInt)
     {
+        //Make sure the room opens when all enemies are dead
         if (!generatingDungeon)
         {
             if (mainRoomInt != 0)
@@ -116,8 +85,6 @@ public class GameManager : MonoBehaviour
     public void OpenExit(int room)
     {
         Vector3Int exitLocation = ProcGen.instance.collisionMap.WorldToCell(ProcGen.instance.mainRoomLocations["mainRoomLocation" + room.ToString()]);
-        // int xPos = Mathf.RoundToInt(ProcGen.instance.mainRoomLocations["mainRoomLocation" + room.ToString()].x);
-        // int yPos = Mathf.RoundToInt(ProcGen.instance.mainRoomLocations["mainRoomLocation" + room.ToString()].y);
         ProcGen.instance.collisionMap.SetTile(exitLocation, null);
         ProcGen.instance.decorationMap.SetTile(exitLocation, null);
         ProcGen.instance.exitMap.SetTile(exitLocation, ProcGen.instance.exit);

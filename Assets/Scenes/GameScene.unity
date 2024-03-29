@@ -6558,7 +6558,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &587296613
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12196,7 +12196,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1084705594
 Transform:
   m_ObjectHideFlags: 0
@@ -13319,6 +13319,8 @@ MonoBehaviour:
   mainRoomAmount: 0
   extraRoomAmount: 0
   hallwayAmount: 0
+  maximumMainRooms: 6
+  maximumExtraRooms: 4
   maxMainRooms: 6
   maxExtraRooms: 3
   minRoomSize: 5
@@ -33807,7 +33809,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2016382178
 Transform:
   m_ObjectHideFlags: 0

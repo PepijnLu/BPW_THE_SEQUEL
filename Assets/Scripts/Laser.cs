@@ -35,6 +35,7 @@ public class Laser : MonoBehaviour
             }
 
             EnemyController enemyController = enemy.GetComponent<EnemyController>();
+            //Let the enemy know if a laser is no longer active
             if (enemyController.laserUp == gameObject)  {   enemyController.laserUp = null; }
             if (enemyController.laserDown == gameObject)  {   enemyController.laserDown = null; }
             if (enemyController.laserLeft == gameObject)  {   enemyController.laserLeft = null; }

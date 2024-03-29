@@ -5,10 +5,9 @@ using UnityEngine;
 public class TurnManager : MonoBehaviour
 {
     public static TurnManager instance;
-    public bool isPlayerTurn;
+    public bool isPlayerTurn, manuallyPassed;
     public PlayerController playerController;
     public int enemiesTurnDone;
-    public bool manuallyPassed;
     void Awake()
     {
         isPlayerTurn = true;
@@ -23,6 +22,7 @@ public class TurnManager : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        //failsafe
         if (!isPlayerTurn && GameManager.instance.enemies.Count <= 0)
         {
             PassToPlayer();
@@ -36,7 +36,6 @@ public class TurnManager : MonoBehaviour
 
     public void CheckActions(GameObject obj)
     {
-
         if ( (obj.tag == "Player") )
         {
             if ( (obj.GetComponent<Stats>().turnDone == true) && (PickupManager.instance.selecting == false))
@@ -59,27 +58,15 @@ public class TurnManager : MonoBehaviour
     }
     public void SwapTurns(GameObject obj)
     {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-            if (obj.tag == "Player")
-            {
-                foreach (GameObject enemy in enemies)
-                {
-                    Stats enemyStats = enemy.GetComponent<Stats>();
-                    enemyStats.fired = false;
-                    enemyStats.moves = 0;
-                    enemyStats.turnDone = false;
-                    enemy.GetComponent<EnemyController>().turnStarted = false;
-                }
-
-                isPlayerTurn = false;
-                Movement.instance.movesRemainingTxt.text = ("Moves remaining: " + (obj.GetComponent<Stats>().moves).ToString());
-            
-                Debug.Log("turn started enemy");
-            }
-            if (obj.tag == "Enemy")
-            {
-                PassToPlayer();
-            }
+        //Pass the turn to the enemy
+        if (obj.tag == "Player")
+        {
+            PassToEnemy(obj);
+        }
+        if (obj.tag == "Enemy")
+        {
+            PassToPlayer();
+        }
     }
 
     public void PassToPlayer() 
@@ -96,5 +83,22 @@ public class TurnManager : MonoBehaviour
             TurnManager.instance.enemiesTurnDone = 0;
             manuallyPassed = false;
         }
+    }
+
+    public void PassToEnemy(GameObject obj)
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (GameObject enemy in enemies)
+        {
+            Stats enemyStats = enemy.GetComponent<Stats>();
+            enemyStats.fired = false;
+            enemyStats.moves = 0;
+            enemyStats.turnDone = false;
+            enemy.GetComponent<EnemyController>().turnStarted = false;
+        }
+
+        isPlayerTurn = false;
+        Movement.instance.movesRemainingTxt.text = ("Moves remaining: " + (obj.GetComponent<Stats>().moves).ToString());
+        Debug.Log("turn started enemy");
     }
 }

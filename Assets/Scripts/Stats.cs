@@ -7,24 +7,15 @@ using Unity.VisualScripting;
 
 public class Stats : MonoBehaviour
 {
-    public int health, maxHealth, damage, maxMoves;
-    public int moves, enemyInt;
-    public GameObject cardPrefab;
-    public GameObject card;
+    public int health, maxHealth, damage, maxMoves, moves, enemyInt, powerLevel;
+    public GameObject cardPrefab, card;
     public TextMeshProUGUI hpText, damageText, nameText, maxMovesText;
     public GameObject icon;
     public Sprite attack, defend, attacker, defender, laserBoi, snail, nosferatu, slime;
     public Image sword;
     public Transform cardSlot;
-    public bool turnDone, fired;
-    public bool inBattle;
-    public bool firstStrike;
-    public bool inList;
-    public bool doneMoving, tryingToEnd;
     public int mainRoomInt, extraRoomInt;
-    public bool moveStarted, collisionCheck;
-    public int powerLevel;
-    public bool attackingFirst;
+    public bool moveStarted, collisionCheck, attackingFirst, doneMoving, tryingToEnd, inList, firstStrike, inBattle, turnDone, fired;
 
     void Awake()
     {
@@ -46,14 +37,12 @@ public class Stats : MonoBehaviour
 
         Transform childHpText = card.transform.Find("hpText");
         Transform childDamageText = card.transform.Find("damageText");
-        Transform childNameText = card.transform.Find("nameText");
         Transform childIcon = card.transform.Find("Icon");
         Transform childMaxMovesText = card.transform.Find("MaxMovesText");
 
         hpText = childHpText.gameObject.GetComponent<TextMeshProUGUI>();
         damageText = childDamageText.gameObject.GetComponent<TextMeshProUGUI>();
         maxMovesText = childMaxMovesText.gameObject.GetComponent<TextMeshProUGUI>();
-        //nameText = childNameText.gameObject.GetComponent<TextMeshProUGUI>();
         icon = childIcon.gameObject;
     }
 
@@ -91,6 +80,7 @@ public class Stats : MonoBehaviour
     {
         if (gameObject.tag == "Enemy")
         {
+            //Set the values based on what I need for the tutorial
             if (Tutorial.instance != null)
             {
                 switch(Tutorial.instance.tutorialEnemiesSpawned)
@@ -122,22 +112,26 @@ public class Stats : MonoBehaviour
                 }
 
             }
+            //Set the power level based on how many rooms you have cleared total
             else if (mainRoomInt != 0)
             {
-                powerLevel = Mathf.FloorToInt(((mainRoomInt) * 1.5f) + ((GameData.dungeonsCompleted * ProcGen.instance.maxMainRooms) * 1.5f));
+                powerLevel = Mathf.FloorToInt((mainRoomInt * 1.5f) + (GameData.roomsCleared * 1.5f));
             }
             else
             {
-                powerLevel = Mathf.FloorToInt(((ProcGen.instance.maxExtraRooms + 1 - extraRoomInt) * 1.5f) + ((GameData.dungeonsCompleted * ProcGen.instance.maxMainRooms) * 1.5f));
+                powerLevel = Mathf.FloorToInt((mainRoomInt * 1.5f * 1.5f) + (GameData.roomsCleared * 1.5f));
             }
             maxHealth = Random.Range(1, powerLevel + 1);
             damage = Random.Range(1, powerLevel + 1);
+            //Decide which enemy is gonna spawn
             if (Tutorial.instance == null)
             {
                 enemyInt = Random.Range(1, 7);
             }
             Image enemyIcon = icon.GetComponent<Image>();
             SpriteRenderer enemySpriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+
+            //Set different things based on which kind of enemy it is
             switch(enemyInt)
             {
                 case 1:
@@ -182,12 +176,4 @@ public class Stats : MonoBehaviour
         hpText.text = health.ToString();
         damageText.text = damage.ToString();
     }
-
-    // void Update()
-    // {
-    //     if (gameObject.tag == "Player")
-    //     {
-    //         Debug.Log(turnDone);
-    //     }
-    // }
 }

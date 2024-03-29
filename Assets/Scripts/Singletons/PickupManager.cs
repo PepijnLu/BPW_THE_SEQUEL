@@ -118,22 +118,11 @@ public class PickupManager : MonoBehaviour
         playerCard.SetActive(false);
         GameManager.instance.stopped = false;
         selecting = false;
-        //playerHP.fontSize = (1 / playerHP.text.Length) * playerHP.fontSize;
-        //playerDamage.fontSize = (1 / playerHP.text.Length) * playerHP.fontSize;
         StartCoroutine(Movement.instance.EndMove(GameManager.instance.playerStats));
         foreach(Stats stats in BattleManager.instance.needToFinish)
         {
             StartCoroutine(Movement.instance.EndMove(stats));
         }
-        
-        // if (playerStats.moves < playerStats.maxMoves)
-        // {
-        //     //playerStats.gameObject.GetComponent<PlayerController>().CheckForPossibleMovement();
-        // }
-        // else
-        // {
-        //     TurnManager.instance.CheckActions(GameManager.instance.player);
-        // }
     }
 
 }

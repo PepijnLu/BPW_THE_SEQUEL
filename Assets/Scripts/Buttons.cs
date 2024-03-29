@@ -15,6 +15,7 @@ public class Buttons : MonoBehaviour
                 BattleManager.instance.attackMade = true;
                 gameObject.SetActive(false);
                 break;
+            //PARRY
             case 2:
                 if (BattleManager.instance.parryable)
                 {

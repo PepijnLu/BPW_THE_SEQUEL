@@ -5,8 +5,6 @@ using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
-    private float horizontalInput;
-    private float verticalInput;
     public float speed;
     private Rigidbody2D rigidbodyComponent;
     public bool turnStarted;

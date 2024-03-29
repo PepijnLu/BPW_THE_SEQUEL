@@ -17,7 +17,8 @@ public class ProcGen : MonoBehaviour
     int x, y;
     //NOTE: EXTRA ROOMS ARE GENERATED BACK TO FRONT. LAST EXTRA ROOM IS EXTRA ROOM 1
     [SerializeField] int mainRoomAmount, extraRoomAmount, hallwayAmount;
-    public int maxMainRooms, maxExtraRooms;
+    public int maximumMainRooms, maximumExtraRooms;
+    [HideInInspector] public int maxMainRooms, maxExtraRooms;
     public int minRoomSize, maxRoomSize, minHallwayLength, maxHallwayLength, minHallwayWidth, maxHallwayWidth, enemySpawnChance, blockSpawnChance, orbSpawnChance;
     int previousX, previousY, previousSize;
     bool occupied, clearedRooms;
@@ -51,6 +52,9 @@ public class ProcGen : MonoBehaviour
 
     public void GenerateDungeon()
     {
+        maxMainRooms = Random.Range(3, maximumMainRooms);
+        maxExtraRooms = Random.Range(3, maximumExtraRooms);
+        Debug.Log("maxMainRooms: " + maxMainRooms + "maxExtraRooms " + maxExtraRooms);
         TurnManager.instance.isPlayerTurn = true;
         playerController.turnStarted = false;
         GameManager.instance.playerStats.moves = 0;
@@ -88,8 +92,6 @@ public class ProcGen : MonoBehaviour
         {
             Destroy(orb);
         }
-        //UIManager.instance.GenerateMinimap();
-        //UIManager.instance.ChangeImageSprite(0, UIManager.instance.roomImg);
         GetRoomNumbers();
         playerController.gameObject.transform.position = new Vector3(50.5f, 50.5f, 0);
         playerController.NukeDirections();
@@ -110,11 +112,9 @@ public class ProcGen : MonoBehaviour
 
         float distanceBetweenCircles = Vector2.Distance(new Vector2(xLocation, yLocation), new Vector2(previousX, previousY));
 
-        // Calculate the sum of the radii
-        float sumOfRadii = size + previousSize;
+        float sumOfCircles = size + previousSize;
 
-        // Check if the circles are overlapping
-        if (distanceBetweenCircles <= sumOfRadii)
+        if (distanceBetweenCircles <= sumOfCircles)
         {
             GetRoomNumbers();
         }
@@ -130,25 +130,21 @@ public class ProcGen : MonoBehaviour
 
     public void OpenEmptyRooms()
     {
-        if (((hallwayAmount + 1) == (maxMainRooms + maxExtraRooms)) && (!clearedRooms))
+        foreach (KeyValuePair<string, int> pair in enemiesPerRoom)
         {
-            clearedRooms = true;
-            foreach (KeyValuePair<string, int> pair in enemiesPerRoom)
+            int enemies = pair.Value;
+            if ( (enemies <= 0) && (pair.Key.Contains("MainRoom")))
             {
-                int enemies = pair.Value;
-                if ( (enemies <= 0) && (pair.Key.Contains("MainRoom")))
+                string numericPart = pair.Key.Substring("enemiesMainRoom".Length);
+                if (int.TryParse(numericPart, out int roomNumber))
                 {
-                    string numericPart = pair.Key.Substring("enemiesMainRoom".Length);
-                    if (int.TryParse(numericPart, out int roomNumber))
+                    if (roomNumber == maxMainRooms)
                     {
-                        if (roomNumber == maxMainRooms)
-                        {
-                            GameManager.instance.OpenExit(roomNumber);
-                        }
-                        else
-                        {   
-                            GameManager.instance.OpenRoom(roomNumber);
-                        }
+                        GameManager.instance.OpenExit(roomNumber);
+                    }
+                    else
+                    {   
+                        GameManager.instance.OpenRoom(roomNumber);
                     }
                 }
             }
@@ -172,16 +168,24 @@ public class ProcGen : MonoBehaviour
         {
             for (int y = yLoc - size; y < 500; y++)
             {
+                //Bool for if a tile already has something on it
                 occupied = false;
-
+                //How far away the current tile is from the center of the room
                 Vector2 difference = new Vector2(x, y) - new Vector2(xLoc, yLoc);
+                //Place a wall tile if the distance to the room is equal to the size
                 if ( (Mathf.RoundToInt( (Mathf.Abs(difference.x) + Mathf.Abs(difference.y) ) ) ) == size)
                 {   
                     collisionMap.SetTile(new Vector3Int(x, y, 0), wall);
                     occupied = true;
                 } 
+
+                //Check if you're currently inside the room
                 if ( (Mathf.RoundToInt( (Mathf.Abs(difference.x) + Mathf.Abs(difference.y) ) ) ) < size)
                 {   
+                    //Set a ground tile
+                    tilemap.SetTile(new Vector3Int(x, y, 0), tile);
+
+                    //Generate a random integer to decide whether or not to spawn an obstacle
                     int randomizer = Random.Range(1, blockSpawnChance);
                     if ( (randomizer == 1) && (Mathf.RoundToInt( (Mathf.Abs(difference.x) + Mathf.Abs(difference.y)) ) > 2 ) && ((x != xLoc) && (y != yLoc)) )
                     {
@@ -189,41 +193,41 @@ public class ProcGen : MonoBehaviour
                         rubbleMap.SetTile(new Vector3Int(x, y, 0), rubbleTiles[randomRubble]);
                         occupied = true;
                     }
-                } 
-                // if ( (Mathf.RoundToInt( (Mathf.Abs(difference.x) + Mathf.Abs(difference.y) ) ) ) == size)
-                // {   
-                // //     collisionMap.SetTile(new Vector3Int(x, y, 0), wall);
-                // } 
-                if ( (Mathf.RoundToInt( (Mathf.Abs(difference.x) + Mathf.Abs(difference.y) ) ) ) < size)
-                {   
-                    tilemap.SetTile(new Vector3Int(x, y, 0), tile);
+
+                    //Generate a random integer to decide whether or not to spawn an enemy
                     int enemyRandom = Random.Range(1, enemySpawnChance);
-                    if ( (occupied == false) && (( (Mathf.RoundToInt( (Mathf.Abs(difference.x) + Mathf.Abs(difference.y) ) ) ) < size)) && (Mathf.RoundToInt( (Mathf.Abs(difference.x) + Mathf.Abs(difference.y)) ) > 2 ))
+                    //Make sure no enemies spawn near walls
+                    if ( (!occupied) && (Mathf.RoundToInt( (Mathf.Abs(difference.x) + Mathf.Abs(difference.y))) > 2 ))
                     {
                         if (enemyRandom == 1)
                         {
+                            //Spawn the enemy
                             GameObject spawnedEnemy = Instantiate(enemyPrefab, new Vector2(x + 0.5f, y + 0.5f), transform.rotation);
                             Stats spawnedEnemyStats = spawnedEnemy.GetComponent<Stats>();
                             occupied = true;
                             enemiesInRoom++;
-
+                            //Let the enemy know it's in a main room
                             if (makeExtra)
                             {
                                 spawnedEnemyStats.mainRoomInt = mainRoomAmount;
                             }
+                            //Let the enemy know it's in an extra room
                             else
                             {
                                 spawnedEnemyStats.extraRoomInt = extraRoomAmount;
                             }
+                            //Set the values of the spawned enemy (damage, health, sprites etc.)
                             spawnedEnemyStats.SetValues();
                         }
-                        if (!occupied)
+                    }
+
+                    //Generate a random integer to decide whether or not to spawn an orb pickup
+                    if (!occupied)
+                    {
+                        int orbRandom = Random.Range(1, orbSpawnChance);
+                        if (orbRandom == 1)
                         {
-                            int orbRandom = Random.Range(1, orbSpawnChance);
-                            if (orbRandom == 1)
-                            {
-                                Instantiate(orbPrefab, new Vector2(x + 0.5f, y + 0.5f), transform.rotation);
-                            }
+                            Instantiate(orbPrefab, new Vector2(x + 0.5f, y + 0.5f), transform.rotation);
                         }
                     }
                 }   
@@ -242,13 +246,6 @@ public class ProcGen : MonoBehaviour
             mainRoomLocations.Add(("mainRoomLocation" + mainRoomAmount.ToString()), new Vector3(xLoc, yLoc, direction));
             mainRoomLengthWidthSize.Add(("mainRoomLWS" + mainRoomAmount.ToString()), new Vector3(length, width, size));
             Debug.Log("mainRoomLocation" + mainRoomAmount.ToString());
-
-            // if (enemiesPerRoom["enemiesMainRoom" + mainRoomAmount.ToString()] <= 0)
-            // {
-            //     // Debug.Log("open main room with 0 enemies");
-            //     // Debug.Log("main room amount = " + mainRoomAmount);
-            //     GameManager.instance.OpenRoom(mainRoomAmount);
-            // }
 
             if (mainRoomAmount == maxMainRooms)
             {
@@ -282,18 +279,14 @@ public class ProcGen : MonoBehaviour
 
     public void GenerateHallway(int direction, int width, int xPos, int yPos, int roomSize, bool makeExtra, int prevDir, int newSize, int length)
     {
-        //int newSize = Random.Range(minRoomSize, maxRoomSize);
-        //int length = oldLength + newSize + roomSize;
-        //int extraRoom = Random.Range(1, 4);
-        int extraRoom = 1;
+        //Random integer to decide whether or not to spawn an extra room
+        int extraRoom = Random.Range(1, 3);
             switch(direction)
             {
-                //up
+                //Generate main room up
                 case 1:
                     hallwayAmount++;
-                    //UIManager.instance.ChangeImageSprite(1, UIManager.instance.roomImg);
                     GenerateRoom(xPos, yPos + length + newSize, newSize, true, direction);
-                    //up, 10 long, 3 wide
                     for (int x = 0; x < 500; x++)
                     {
                         for (int y = 0; y < 500; y++)
@@ -323,10 +316,9 @@ public class ProcGen : MonoBehaviour
                     }
                     break;
 
-                //right
+                //Generate main room right
                 case 2:
                 hallwayAmount++;
-                //UIManager.instance.ChangeImageSprite(4, UIManager.instance.roomImg);
                     GenerateRoom(xPos + length + newSize, yPos, newSize, true, direction);
 
                     for (int x = 0; x < 500; x++)
@@ -363,17 +355,14 @@ public class ProcGen : MonoBehaviour
         if ((makeExtra == true) && (extraRoomAmount + 1 <= maxExtraRooms))
         {
             Debug.Log(prevDir);
-           switch(prevDir)
+            switch(prevDir)
             {
                 case 1:
                     hallwayAmount++;
                     //extra room left
                     if ((extraRoom == 1))
                     {
-                        //UIManager.instance.ChangeImageSprite(3, UIManager.instance.roomImg);
                         GenerateRoom(xPos - length - newSize, yPos, newSize, false, 4);
-
-                        //up, 10 long, 3 wide
                         for (int x = 0; x < 500; x++)
                         {
                             for (int y = 0; y < 500; y++)
@@ -401,10 +390,7 @@ public class ProcGen : MonoBehaviour
                     //extra room down
                     if ((extraRoom == 1))
                     {
-                        //UIManager.instance.ChangeImageSprite(2, UIManager.instance.roomImg);
                         GenerateRoom(xPos, yPos - length - newSize, newSize, false, 3);
-
-                        //up, 10 long, 3 wide
                         for (int x = 0; x < 500; x++)
                         {
                             for (int y = 0; y < 500; y++)

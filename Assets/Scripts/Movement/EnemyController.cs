@@ -10,15 +10,9 @@ public class EnemyController : MonoBehaviour
     public List<GameObject> loot;
 
     //CODE A NEV MESH AGENT
-    int firstDir;
-    int secondDir;
-    int thirdDir;
-    int fourthDir;
     public int direction;
     int zero;
-    bool succesfullyMoved;
-    public bool enemyChillTime;
-    public bool collidingWithEnemy;
+    public bool enemyChillTime, collidingWithEnemy;
     List<int> directions;
     List<GameObject> directionsGO;
     public GameObject square, laser;
@@ -26,7 +20,6 @@ public class EnemyController : MonoBehaviour
     public GameObject laserUp, laserDown, laserLeft, laserRight;
     public Sprite attacker, defender;
     Stats enemyStats;
-    bool chillTimeStarted;
     public int blocksSurrounding;
     public bool notDoneFiring;
     public Vector2 distanceToPlayer;
@@ -118,19 +111,6 @@ public class EnemyController : MonoBehaviour
         {
             Vector2 distanceToCenterRoom = new Vector2(0, 0);
             Vector2 distanceToPlayer = (gameObject.transform.position - GameManager.instance.player.transform.position);
-            // float roomSizeToCheck = 0;
-            // if (enemyStats.mainRoomInt != 0)
-            // {
-            //     distanceToCenterRoom = (gameObject.transform.position - ProcGen.instance.mainRoomLocations[("mainRoomLocation" + enemyStats.mainRoomInt.ToString())]);
-            //     roomSizeToCheck = ProcGen.instance.mainRoomLengthWidthSize[(("mainRoomLWS") + enemyStats.mainRoomInt.ToString())].z;
-            // }
-            // else if (enemyStats.extraRoomInt != 0)
-            // {
-            //     distanceToCenterRoom = (gameObject.transform.position - ProcGen.instance.extraRoomLocations[("extraRoomLocation" + enemyStats.extraRoomInt.ToString())]);
-            //     roomSizeToCheck = ProcGen.instance.extraRoomLengthWidthSize[(("extraRoomLWS") + enemyStats.extraRoomInt.ToString())].z;
-            // }
-            succesfullyMoved = false;
-            //randomDirection = Random.Range(1, 5);
             CalculateDirection();
 
             for (int i = 0; i < 4; i++)
@@ -297,8 +277,7 @@ public class EnemyController : MonoBehaviour
 
     void GenerateLoot()
     {
-        int lootInt = Random.Range(1, 4);
-        //int lootInt = 1;
+        int lootInt = Random.Range(1, 3);
         Debug.Log("tutorial instance: " + Tutorial.instance);
         if (Tutorial.instance != null)
         {

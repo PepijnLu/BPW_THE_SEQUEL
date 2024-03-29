@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Pickup : MonoBehaviour
 {
-    public int pickupID;
     public GameObject cards;
     //1 = cards
     void Start()
@@ -15,15 +14,8 @@ public class Pickup : MonoBehaviour
     {
         GameManager.instance.stopped = true;
         Stats playerStats = player.GetComponent<Stats>();
-        switch(pickupID)
-        {
-            case 1:
-                cards.SetActive(true);
-                playerStats.card.SetActive(true);
-                PickupManager.instance.InitializeCards(gameObject);
-                break;
-        }
+        cards.SetActive(true);
+        playerStats.card.SetActive(true);
+        PickupManager.instance.InitializeCards(gameObject);
     }
-
-
 }

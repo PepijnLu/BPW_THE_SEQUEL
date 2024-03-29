@@ -70,8 +70,7 @@ public class Movement : MonoBehaviour
 
         if ( (objectToMove.tag == "Enemy") && (objectToMove.GetComponent<Stats>().inBattle == true))
         {
-            // Debug.Log("In battle");
-            // stats.moves++;
+
         }
         else
         {
@@ -108,14 +107,6 @@ public class Movement : MonoBehaviour
             }
         }
         yield return new WaitForSeconds(0.025f);
-        // if (objectToMove.tag == "Enemy")
-        // {
-        //     EnemyController enemyController = stats.gameObject.GetComponent<EnemyController>();
-        //     while (enemyController.notDoneFiring)
-        //     {
-        //         yield return null;
-        //     }
-        // }
         if (!GameManager.instance.stopped)
         {
             StartCoroutine(EndMove(stats));

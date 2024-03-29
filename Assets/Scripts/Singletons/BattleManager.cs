@@ -9,18 +9,14 @@ public class BattleManager : MonoBehaviour
 {
     public static BattleManager instance;
     public Transform playerCardSlot, enemyCardSlot;
-    public bool battle;
     public List<GameObject> battleOpponents;
     public List<Stats> needToFinish;
     public Image playerSword, enemySword;
     GameObject[] cards;
-    public bool attackMade, parryable, parried, triedToParry;
-    bool playerAttack, enemyAttack;
+    public bool battle, attackMade, parryable, parried, triedToParry, takingDamage;
     public GameObject playerAttackScreen, attackButton, parryButton;
     public TextMeshProUGUI attackText;
     public float distanceBetween;
-    public bool takingDamage;
-
     void Awake()
     {
         instance = this;
@@ -31,11 +27,6 @@ public class BattleManager : MonoBehaviour
         }
         battleOpponents = new List<GameObject>(){};
         needToFinish = new List<Stats>(){};
-    }
-
-    void Start()
-    {
-        
     }
 
     public void StartTakeDamageRoutine(int damage, GameObject enemy)
@@ -85,7 +76,6 @@ public class BattleManager : MonoBehaviour
             playerStats.card.SetActive(true);
             enemyStats.card.SetActive(true);
 
-            ///UpdateUI(playerStats, enemyStats, playerDamage, enemyDamage);
             if (enemyStats.attackingFirst)
             {
                 StartCoroutine(AttackInBattle(enemyStats, playerStats));
@@ -94,7 +84,6 @@ public class BattleManager : MonoBehaviour
             {
                 StartCoroutine(AttackInBattle(playerStats, enemyStats));
             }
-            //StartCoroutine(DisableCards(playerStats, enemyStats, resetAudio, playerIniate));
         }
     }
 
