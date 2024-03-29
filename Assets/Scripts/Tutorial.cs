@@ -186,10 +186,15 @@ public class Tutorial : MonoBehaviour
         UIManager.instance.tutorialTextBox.SetActive(false);
         UIManager.instance.tutorialCornerTextBox.SetActive(false);
         GameManager.instance.playerStats.maxHealth = 5;
-        GameManager.instance.playerStats.health = 5;
+        GameManager.instance.playerStats.health = GameManager.instance.playerStats.maxHealth;
         GameManager.instance.playerStats.damage = 1;
         GameManager.instance.playerStats.maxMoves = 1;
+        GameManager.instance.playerStats.maxMovesText.text = GameManager.instance.playerStats.maxMoves.ToString();
+        GameManager.instance.playerStats.hpText.text = GameManager.instance.playerStats.health.ToString();
+        GameManager.instance.playerStats.damageText.text = GameManager.instance.playerStats.damage.ToString();
         ProcGen.instance.playerController.orbsCollected = 0;
+        GameData.dungeonsCompleted = -1;
+        GameData.roomsCleared = 0;
         instance = null;
         Destroy(gameObject);
     }

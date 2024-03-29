@@ -231,7 +231,10 @@ public class BattleManager : MonoBehaviour
             attackText.gameObject.SetActive(false);
         }
         parried = false;
-        AudioManager.instance.PlaySound(AudioManager.instance.audioSources["hitSFX"]);
+        if (damage != 0)
+        {
+            AudioManager.instance.PlaySound(AudioManager.instance.audioSources["hitSFX"]);
+        }
         if (Tutorial.instance != null)
         {
             if (Tutorial.instance.tutorialPhase == 3) {damage = 0;}

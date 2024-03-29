@@ -14664,6 +14664,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textToDisplay: Damage is turned off until you get it, so don't worry about dying.
+    Normally if you miss, you take double damage.
   duration: 4
 --- !u!50 &1389271659
 Rigidbody2D:

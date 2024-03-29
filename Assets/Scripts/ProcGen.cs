@@ -51,6 +51,10 @@ public class ProcGen : MonoBehaviour
 
     public void GenerateDungeon()
     {
+        TurnManager.instance.isPlayerTurn = true;
+        playerController.turnStarted = false;
+        GameManager.instance.playerStats.moves = 0;
+        GameManager.instance.playerStats.turnDone = false;
         GameManager.instance.generatingDungeon = true;
         previousSize = 0;
         previousX = 0;
@@ -87,8 +91,6 @@ public class ProcGen : MonoBehaviour
         //UIManager.instance.GenerateMinimap();
         //UIManager.instance.ChangeImageSprite(0, UIManager.instance.roomImg);
         GetRoomNumbers();
-        TurnManager.instance.isPlayerTurn = true;
-        playerController.turnStarted = false;
         playerController.gameObject.transform.position = new Vector3(50.5f, 50.5f, 0);
         playerController.NukeDirections();
         playerController.CheckForPossibleMovement();
