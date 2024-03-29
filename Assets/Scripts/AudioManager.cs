@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
-    public AudioSource menuTheme, gameTheme, battleTheme, fireSFX, blockSFX, gameOverSFX, enemyDeathSFX, dodgeSFX, critSFX, exitSFX, chestSFX, pickupSFX, maxOrbSFX, hitSFX, doorUnlockSFX;
+    public AudioSource menuTheme, gameTheme, battleTheme, gameOverTheme, fireSFX, blockSFX, gameOverSFX, enemyDeathSFX, dodgeSFX, critSFX, exitSFX, chestSFX, pickupSFX, maxOrbSFX, hitSFX, doorUnlockSFX, pickCardSFX;
     public Dictionary<string, AudioSource> audioSources = new Dictionary<string, AudioSource>();
     public Slider musicSlider, sfxSlider;
 
@@ -29,6 +29,8 @@ public class AudioManager : MonoBehaviour
         audioSources.Add("hitSFX", hitSFX);
         audioSources.Add("openRoomSFX", doorUnlockSFX);
         audioSources.Add("chestSFX", chestSFX);
+        audioSources.Add("pickCardSFX", pickCardSFX);
+        audioSources.Add("gameOverTheme", gameOverTheme);
     }
 
     void Start()
@@ -60,9 +62,17 @@ public class AudioManager : MonoBehaviour
             StartCoroutine(AudioFadeIn(audioSources["gameTheme"], 2f));
             PlaySound(audioSources["gameTheme"]);
         }
+        if (SceneManager.GetActiveScene().name == "GameOver")
+        {
+            StartCoroutine(AudioFadeIn(audioSources["gameOverTheme"], 2f));
+            PlaySound(audioSources["gameOverTheme"]);
+        }
 
-        musicSlider.value = GameData.musicVolume;
-        sfxSlider.value = GameData.sfxVolume;
+        if ((musicSlider != null) && (sfxSlider != null))
+        {
+            musicSlider.value = GameData.musicVolume;
+            sfxSlider.value = GameData.sfxVolume;
+        }
 
     }
 

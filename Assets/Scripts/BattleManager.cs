@@ -238,11 +238,11 @@ public class BattleManager : MonoBehaviour
         }
         defender.health -= damage;
         defender.hpText.text = defender.health.ToString();
-        yield return new WaitForSeconds(1);
         if (defender.health <= 0)
         {
-            Debug.Log("Defender dead");
             AudioManager.instance.PlaySound(AudioManager.instance.audioSources["enemyDeathSFX"]);
+            yield return new WaitForSeconds(1f);
+            Debug.Log("Defender dead");
             playerAttackScreen.SetActive(false);
             defender.health = 0;
             defender.hpText.text = defender.health.ToString();
@@ -287,10 +287,12 @@ public class BattleManager : MonoBehaviour
         }
         else if (defender.gameObject.tag == "Enemy")
         {
+            yield return new WaitForSeconds(0.5f);
             StartCoroutine(AttackInBattle(defender, attacker));
         }
         else if (attacker.gameObject.tag == "Enemy")
         {
+            yield return new WaitForSeconds(0.5f);
             StartCoroutine(AttackInBattle(defender, attacker));
         }
     }

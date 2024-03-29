@@ -37,6 +37,7 @@ public class Card : MonoBehaviour
 
     public void WhenClicked()
     {
+        AudioManager.instance.PlaySound(AudioManager.instance.audioSources["pickCardSFX"]);
         GameManager.instance.playerStats.health += health;
         GameManager.instance.playerStats.hpText.text = GameManager.instance.playerStats.health.ToString();
         GameManager.instance.playerStats.maxHealth += health;

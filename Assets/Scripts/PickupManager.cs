@@ -55,6 +55,7 @@ public class PickupManager : MonoBehaviour
 
     public void GreenCard()
     {
+        AudioManager.instance.PlaySound(AudioManager.instance.audioSources["pickCardSFX"]);
         playerStats.health += greenCardHealth;
         playerHP.text = playerStats.health.ToString();
         playerStats.maxHealth += greenCardHealth;
@@ -66,6 +67,7 @@ public class PickupManager : MonoBehaviour
     }
     public void BlueCard()
     {
+        AudioManager.instance.PlaySound(AudioManager.instance.audioSources["pickCardSFX"]);
         playerStats.health = playerStats.maxHealth;
         playerHP.text = playerStats.health.ToString();
         cards.SetActive(false);
@@ -74,6 +76,7 @@ public class PickupManager : MonoBehaviour
     }
     public void RedCard()
     {
+        AudioManager.instance.PlaySound(AudioManager.instance.audioSources["pickCardSFX"]);
         playerHP.text = (playerStats.health + redCardHealth).ToString();
         playerStats.health += redCardHealth;
         playerStats.maxHealth += redCardHealth;
