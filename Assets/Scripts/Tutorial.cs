@@ -69,7 +69,7 @@ public class Tutorial : MonoBehaviour
         yield return new WaitForSeconds(2f);
         while (TurnManager.instance.isPlayerTurn) {yield return null;}
         while (!TurnManager.instance.isPlayerTurn) {yield return null;}
-        UIManager.instance.StartShowTextRoutine("If you move next to an enemy, you'll iniate an battle, and vice versa.", 3f, UIManager.instance.tutorialText);
+        UIManager.instance.StartShowTextRoutine("If you move next to an enemy, you'll iniate a battle, and vice versa.", 3f, UIManager.instance.tutorialText);
         yield return new WaitForSeconds(3f);
         UIManager.instance.StartShowTextRoutine("Try iniating a battle!", 2f, UIManager.instance.tutorialText);
         yield return new WaitForSeconds(2f);
@@ -133,13 +133,13 @@ public class Tutorial : MonoBehaviour
         OpenTutorialDoor(doorLocations[3]);
         OpenTutorialDoor(doorLocations[4]);
         OpenTutorialDoor(doorLocations[5]);
-        UIManager.instance.StartShowTextRoutine("You can now proceed past the doors", 2f, UIManager.instance.tutorialText);
+        UIManager.instance.StartShowTextRoutine("You can now proceed past the doors.", 2f, UIManager.instance.tutorialText);
         yield return new WaitForSeconds(2f);
         while (TurnManager.instance.playerController.orbsCollected == 0)
         {
             yield return null;
         }
-        UIManager.instance.StartShowTextRoutine("Collect 9 more of these to gain another move!.", 3f, UIManager.instance.tutorialText);
+        UIManager.instance.StartShowTextRoutine("Collect 9 more of these to gain another move!", 3f, UIManager.instance.tutorialText);
         while (TurnManager.instance.playerController.orbsCollected != 0)
         {
             yield return null;

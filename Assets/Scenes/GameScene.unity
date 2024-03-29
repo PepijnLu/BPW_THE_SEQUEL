@@ -10228,8 +10228,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 725657c2c80890e45a68f7573893a5d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textToDisplay: The last enemy type is a ranged enemy. It will run away and shoot
-    when you get close to it.
+  textToDisplay: The last enemy type is ranged. It will run away and shoot when you
+    get close to it.
   duration: 4
 --- !u!50 &741554667
 Rigidbody2D:
@@ -14630,7 +14630,7 @@ GameObject:
   - component: {fileID: 1389271659}
   - component: {fileID: 1389271658}
   m_Layer: 0
-  m_Name: TextLine4 (1)
+  m_Name: TextLine8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14663,7 +14663,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 725657c2c80890e45a68f7573893a5d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textToDisplay: Damage is turned off until you get it, so don.t worry about dying.
+  textToDisplay: Damage is turned off until you get it, so don't worry about dying.
   duration: 4
 --- !u!50 &1389271659
 Rigidbody2D:
