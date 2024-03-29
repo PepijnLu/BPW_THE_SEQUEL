@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.VisualScripting;
 
 public class Stats : MonoBehaviour
 {
@@ -12,13 +13,14 @@ public class Stats : MonoBehaviour
     public GameObject card;
     public TextMeshProUGUI hpText, damageText, nameText, maxMovesText;
     public GameObject icon;
-    public Sprite attack, defend, attacker, defender, laserBoi;
+    public Sprite attack, defend, attacker, defender, laserBoi, snail, nosferatu, slime;
     public Image sword;
     public Transform cardSlot;
     public bool turnDone, fired;
     public bool inBattle;
     public bool firstStrike;
     public bool inList;
+    public bool doneMoving, tryingToEnd;
     public int mainRoomInt, extraRoomInt;
     public bool moveStarted, collisionCheck;
     public int powerLevel;
@@ -73,6 +75,17 @@ public class Stats : MonoBehaviour
         }
     }
 
+    void FixedUpdate()
+    {
+        if ((gameObject.tag == "Enemy") && (!TurnManager.instance.isPlayerTurn))
+        {
+            if ((moves >= maxMoves) && (!GameManager.instance.stopped) && turnDone == false && doneMoving && !tryingToEnd)
+            {
+                tryingToEnd = true;
+                StartCoroutine(Movement.instance.EndMove(this));
+            }
+        }
+    }
 
     public void SetValues()
     {
@@ -121,7 +134,7 @@ public class Stats : MonoBehaviour
             damage = Random.Range(1, powerLevel + 1);
             if (Tutorial.instance == null)
             {
-                enemyInt = Random.Range(1, 4);
+                enemyInt = Random.Range(1, 7);
             }
             Image enemyIcon = icon.GetComponent<Image>();
             SpriteRenderer enemySpriteRenderer = gameObject.GetComponent<SpriteRenderer>();
@@ -145,10 +158,26 @@ public class Stats : MonoBehaviour
                     health = 1;
                     damage = 1;
                     break;
+                case 4:
+                    enemyIcon.sprite = slime;
+                    enemySpriteRenderer.sprite = slime;
+                    maxMoves = 1;
+                    break;
+                case 5:
+                    enemyIcon.sprite = snail;
+                    enemySpriteRenderer.sprite = snail;
+                    maxMoves = 1;
+                    break;
+                case 6:
+                    enemyIcon.sprite = nosferatu;
+                    enemySpriteRenderer.sprite = nosferatu;
+                    maxMoves = 3;
+                    break;
             }
         }
         
         health = maxHealth;
+        maxMoves += GameData.dungeonsCompleted;
         maxMovesText.text = maxMoves.ToString();
         hpText.text = health.ToString();
         damageText.text = damage.ToString();

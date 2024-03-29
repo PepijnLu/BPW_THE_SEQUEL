@@ -131,11 +131,6 @@ public class PlayerController : MonoBehaviour
         left = null;
         right = null;
     }
-
-    IEnumerator Tutorial()
-    {
-        yield return null;
-    }
     void PlayerTurn()
     {
         Debug.Log("Player Turn");
@@ -174,6 +169,10 @@ public class PlayerController : MonoBehaviour
     {
         if (collider.gameObject.tag == "Exit")
         {
+            if (Tutorial.instance != null)
+            {
+                Tutorial.instance.EndTutorial();
+            }
             AudioManager.instance.PlaySound(AudioManager.instance.audioSources["exitSFX"]);
             Movement.instance.resetting = true;
             StartCoroutine(SetResetting());

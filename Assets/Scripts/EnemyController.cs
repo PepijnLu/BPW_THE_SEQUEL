@@ -116,19 +116,19 @@ public class EnemyController : MonoBehaviour
         Debug.Log("EnemyMove: enemymove");
         if (!enemyStats.inBattle)
         {
-            distanceToPlayer = (gameObject.transform.position - GameManager.instance.player.transform.position);
             Vector2 distanceToCenterRoom = new Vector2(0, 0);
-            float roomSizeToCheck = 0;
-            if (enemyStats.mainRoomInt != 0)
-            {
-                distanceToCenterRoom = (gameObject.transform.position - ProcGen.instance.mainRoomLocations[("mainRoomLocation" + enemyStats.mainRoomInt.ToString())]);
-                roomSizeToCheck = ProcGen.instance.mainRoomLengthWidthSize[(("mainRoomLWS") + enemyStats.mainRoomInt.ToString())].z;
-            }
-            else if (enemyStats.extraRoomInt != 0)
-            {
-                distanceToCenterRoom = (gameObject.transform.position - ProcGen.instance.extraRoomLocations[("extraRoomLocation" + enemyStats.extraRoomInt.ToString())]);
-                roomSizeToCheck = ProcGen.instance.extraRoomLengthWidthSize[(("extraRoomLWS") + enemyStats.extraRoomInt.ToString())].z;
-            }
+            Vector2 distanceToPlayer = (gameObject.transform.position - GameManager.instance.player.transform.position);
+            // float roomSizeToCheck = 0;
+            // if (enemyStats.mainRoomInt != 0)
+            // {
+            //     distanceToCenterRoom = (gameObject.transform.position - ProcGen.instance.mainRoomLocations[("mainRoomLocation" + enemyStats.mainRoomInt.ToString())]);
+            //     roomSizeToCheck = ProcGen.instance.mainRoomLengthWidthSize[(("mainRoomLWS") + enemyStats.mainRoomInt.ToString())].z;
+            // }
+            // else if (enemyStats.extraRoomInt != 0)
+            // {
+            //     distanceToCenterRoom = (gameObject.transform.position - ProcGen.instance.extraRoomLocations[("extraRoomLocation" + enemyStats.extraRoomInt.ToString())]);
+            //     roomSizeToCheck = ProcGen.instance.extraRoomLengthWidthSize[(("extraRoomLWS") + enemyStats.extraRoomInt.ToString())].z;
+            // }
             succesfullyMoved = false;
             //randomDirection = Random.Range(1, 5);
             CalculateDirection();
@@ -146,7 +146,7 @@ public class EnemyController : MonoBehaviour
                 }
                 else
                 {
-                    if ( (directionsGO[directions[i] - 1] != null) && (succesfullyMovedLocal == false) /* && (distanceToPlayer.magnitude < 10) && ((roomSizeToCheck == 0) || (distanceToCenterRoom.magnitude < roomSizeToCheck - 2))*/ )
+                    if ( (directionsGO[directions[i] - 1] != null) && (succesfullyMovedLocal == false) && (distanceToPlayer.magnitude < 10) /* && ((roomSizeToCheck == 0) || (distanceToCenterRoom.magnitude < roomSizeToCheck - 2))*/ )
                     {
                         //Debug.Log("EnemyMove: NormalEnemy");
                         Movement.instance.MoveTile(directions[i], gameObject, up, down, right, left);
@@ -302,16 +302,9 @@ public class EnemyController : MonoBehaviour
         Debug.Log("tutorial instance: " + Tutorial.instance);
         if (Tutorial.instance != null)
         {
-            if (lootInt == 1)
+            if(Tutorial.instance.tutorialPhase == 2)
             {
-                if(Tutorial.instance.tutorial  && (Tutorial.instance.tutorialPhase != 2))
-                {
-                    //nothing
-                }
-                else
-                {
-                    GameObject newLoot = Instantiate(loot[lootInt - 1], transform.position, transform.rotation);
-                }
+                GameObject newLoot = Instantiate(loot[0], transform.position, transform.rotation);
             }
         }
         else

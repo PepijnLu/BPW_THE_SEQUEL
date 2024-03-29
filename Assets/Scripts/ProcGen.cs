@@ -37,7 +37,7 @@ public class ProcGen : MonoBehaviour
     {
         normalTilemaps = new List<Tilemap>(){tilemap, collisionMap, exitMap, chestMap, decorationMap, rubbleMap};
         tutorialTilemaps = new List<Tilemap>(){tutorialGround, tutorialCollision, tutorialChest, tutorialExit};
-        GetRoomNumbers();
+        //GetRoomNumbers();
     }
 
     // Update is called once per frame

@@ -224,6 +224,9 @@ MonoBehaviour:
   attacker: {fileID: 1936497647, guid: ed4edcc13cc60764181cc25a7679faf6, type: 3}
   defender: {fileID: -807790066, guid: ed4edcc13cc60764181cc25a7679faf6, type: 3}
   laserBoi: {fileID: -1066010435, guid: 707e83f2eb94b4d4382da07c9620546e, type: 3}
+  snail: {fileID: 1091166691, guid: 707e83f2eb94b4d4382da07c9620546e, type: 3}
+  nosferatu: {fileID: 148825823, guid: 707e83f2eb94b4d4382da07c9620546e, type: 3}
+  slime: {fileID: -777030297, guid: 707e83f2eb94b4d4382da07c9620546e, type: 3}
   sword: {fileID: 0}
   cardSlot: {fileID: 0}
   turnDone: 0

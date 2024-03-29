@@ -9,8 +9,7 @@ public class GameManager : MonoBehaviour
         TO DO:
 
         fix:  
-        -no enemies turn doesnt pass
-        -laser enemies sometimes dont fire
+        -enemies next to walls cant move
 
         add:
         -MAKE HALLWAYS INTERESTING

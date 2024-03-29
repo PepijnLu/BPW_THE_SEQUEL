@@ -9,9 +9,10 @@ public class ChestManager : MonoBehaviour
     public List<Transform> threeCardsTransforms, fiveCardTransforms, nineCardTransforms;
     public float cardSize3, cardSize5, cardSize9;
     public GameObject card;
-    public bool openingChest;
+    public bool openingChest, chestOpen;
     public Sprite icon3, icon5, icon9, card3, card5, card9;
     public Sprite currentIcon, currentCard;
+    public Transform cardParent;
 
     void Awake()
     {
@@ -40,8 +41,10 @@ public class ChestManager : MonoBehaviour
             newCard.transform.localScale = new Vector3(cardSize, cardSize, cardSize);
             newCard.transform.SetParent(UIManager.instance.canvas.transform);
             newCard.GetComponent<Card>().Initialize(true);
+            newCard.transform.SetParent(cardParent);
         }
         openingChest = false;
+        chestOpen = true;
     }
 
     public void CheckCards()
@@ -59,7 +62,16 @@ public class ChestManager : MonoBehaviour
         GameManager.instance.stopped = false;
         GameManager.instance.playerStats.card.SetActive(false);
         Vector3Int cellPosition = ProcGen.instance.chestMap.WorldToCell(GameManager.instance.player.transform.position);
-        ProcGen.instance.chestMap.SetTile(cellPosition, null);
+        if (Tutorial.instance != null)
+        {
+            cellPosition = Tutorial.instance.tutorialChestMap.WorldToCell(GameManager.instance.player.transform.position);
+            Tutorial.instance.tutorialChestMap.SetTile(cellPosition, null);
+        }
+        else
+        {
+            ProcGen.instance.chestMap.SetTile(cellPosition, null);
+        }
+        chestOpen = false;
         foreach(Stats stats in BattleManager.instance.needToFinish)
         {
             StartCoroutine(Movement.instance.EndMove(stats));

@@ -10,8 +10,14 @@ public class Tutorial : MonoBehaviour
     public static Tutorial instance;
     public List<Transform> doorLocations, enemyLocations, chestLocations;
     public Transform boxedEnemy, tutorialExitLocation;
-    public Tilemap tutorialCollisionMap, tutorialDecorationMap, tutorialChestMap, tutorialExitMap;
+    public Tilemap tutorialGroundMap, tutorialCollisionMap, tutorialDecorationMap, tutorialChestMap, tutorialExitMap;
     public int tutorialPhase;
+
+    /* 
+    -assign tutorial ground map
+    -fix ranged enemy
+    */
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -108,10 +114,10 @@ public class Tutorial : MonoBehaviour
         yield return new WaitForSeconds(3f);
         UIManager.instance.StartShowTextRoutine("The way to the exit will always be up and right. Extra rooms are down or left.", 3f, UIManager.instance.tutorialText);
         yield return new WaitForSeconds(3f);
-        while (ec.distanceToPlayer.magnitude > 7) {yield return null;}
-        UIManager.instance.StartShowTextRoutine("There's a chest in the middle of the room, but it appears to be locked.", 3f, UIManager.instance.tutorialText);
-        yield return new WaitForSeconds(3f);
-        UIManager.instance.StartShowTextRoutine("Clear the room first.", 1f, UIManager.instance.tutorialText);
+        //while (ec.distanceToPlayer.magnitude > 7) {yield return null;}
+        //UIManager.instance.StartShowTextRoutine("There's a chest in the middle of the room, but it appears to be locked.", 3f, UIManager.instance.tutorialText);
+        //yield return new WaitForSeconds(3f);
+        //UIManager.instance.StartShowTextRoutine("Clear the room first.", 1f, UIManager.instance.tutorialText);
         while (newEnemy3.activeSelf || newEnemy4.activeSelf)
         {
             yield return null;
@@ -120,7 +126,7 @@ public class Tutorial : MonoBehaviour
         tutorialDecorationMap.SetTile(cellPosition, null);
         tutorialCollisionMap.SetTile(cellPosition, null);
         tutorialChestMap.SetTile(cellPosition, ProcGen.instance.chest);
-        while (!ChestManager.instance.openingChest) {yield return null;}
+        while (!ChestManager.instance.chestOpen) {yield return null;}
         yield return new WaitForSeconds(1f);
         UIManager.instance.StartShowTextRoutine("Cards! Collect them all!", 3f, UIManager.instance.tutorialText);
         while (GameManager.instance.stopped) {yield return null;}
@@ -169,4 +175,22 @@ public class Tutorial : MonoBehaviour
         tutorialDecorationMap.SetTile(cellPosition, null);
         tutorialExitMap.SetTile(cellPosition, ProcGen.instance.exit);
     }  
+
+    public void EndTutorial()
+    {
+        tutorialGroundMap.ClearAllTiles();
+        tutorialChestMap.ClearAllTiles();
+        tutorialCollisionMap.ClearAllTiles();
+        tutorialDecorationMap.ClearAllTiles();
+        tutorialExitMap.ClearAllTiles();
+        UIManager.instance.tutorialTextBox.SetActive(false);
+        UIManager.instance.tutorialCornerTextBox.SetActive(false);
+        GameManager.instance.playerStats.maxHealth = 5;
+        GameManager.instance.playerStats.health = 5;
+        GameManager.instance.playerStats.damage = 1;
+        GameManager.instance.playerStats.maxMoves = 1;
+        ProcGen.instance.playerController.orbsCollected = 0;
+        instance = null;
+        Destroy(gameObject);
+    }
 }

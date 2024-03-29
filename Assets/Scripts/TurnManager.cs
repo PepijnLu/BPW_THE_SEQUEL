@@ -8,7 +8,7 @@ public class TurnManager : MonoBehaviour
     public bool isPlayerTurn;
     public PlayerController playerController;
     public int enemiesTurnDone;
-
+    public bool manuallyPassed;
     void Awake()
     {
         isPlayerTurn = true;
@@ -25,11 +25,12 @@ public class TurnManager : MonoBehaviour
     {
         if (!isPlayerTurn && GameManager.instance.enemies.Count <= 0)
         {
-            GameManager.instance.playerStats.moves = 0;
-            ProcGen.instance.playerController.turnStarted = false;
-            isPlayerTurn = true;
-            Debug.Log("turn started player");
-            Movement.instance.movesRemainingTxt.text = ("Moves remaining: " + (GameManager.instance.playerStats.maxMoves - GameManager.instance.playerStats.moves).ToString());
+            PassToPlayer();
+        }
+
+        if (!isPlayerTurn && (!GameManager.instance.stopped) && (TurnManager.instance.enemiesTurnDone == GameManager.instance.enemies.Count))
+        {
+            PassToPlayer();
         }
     }
 
@@ -77,12 +78,23 @@ public class TurnManager : MonoBehaviour
             }
             if (obj.tag == "Enemy")
             {
-                GameManager.instance.playerStats.turnDone = false;
-                GameManager.instance.playerStats.moves = 0;
-                ProcGen.instance.playerController.turnStarted = false;
-                isPlayerTurn = true;
-                Debug.Log("turn started player");
-                Movement.instance.movesRemainingTxt.text = ("Moves remaining: " + (GameManager.instance.playerStats.maxMoves - GameManager.instance.playerStats.moves).ToString());
+                PassToPlayer();
             }
+    }
+
+    public void PassToPlayer() 
+    {
+        if (!manuallyPassed)
+        {
+            manuallyPassed = true;
+            GameManager.instance.playerStats.moves = 0;
+            ProcGen.instance.playerController.turnStarted = false;
+            GameManager.instance.playerStats.turnDone = false;
+            isPlayerTurn = true;
+            Debug.Log("turn started player");
+            Movement.instance.movesRemainingTxt.text = ("Moves remaining: " + (GameManager.instance.playerStats.maxMoves - GameManager.instance.playerStats.moves).ToString());
+            TurnManager.instance.enemiesTurnDone = 0;
+            manuallyPassed = false;
+        }
     }
 }

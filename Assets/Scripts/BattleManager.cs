@@ -54,7 +54,7 @@ public class BattleManager : MonoBehaviour
         
         Stats enemyInListStats = enemy.GetComponent<Stats>();
         enemyInListStats.inBattle = true;
-        GameManager.instance.stopped = true;
+        Debug.Log("stopped set to true");
 
         if (enemyInListStats.inList == false)
         {
@@ -150,6 +150,9 @@ public class BattleManager : MonoBehaviour
 
     public IEnumerator AttackInBattle(Stats attacker, Stats defender)
     {
+        attacker.inBattle = true;
+        defender.inBattle = true;
+        GameManager.instance.stopped = true;
         playerAttackScreen.SetActive(true);
         Debug.Log("Attack: " + attacker + "Defemd: " + defender);
         parryable = false;
@@ -235,6 +238,7 @@ public class BattleManager : MonoBehaviour
         }
         defender.health -= damage;
         defender.hpText.text = defender.health.ToString();
+        yield return new WaitForSeconds(1);
         if (defender.health <= 0)
         {
             Debug.Log("Defender dead");
@@ -254,13 +258,14 @@ public class BattleManager : MonoBehaviour
             battleOpponents.Remove(defender.gameObject);
             battle = false;
             yield return new WaitForSeconds(0.2f);
+            Debug.Log("battleOpponents :" + battleOpponents.Count);
             if(battleOpponents.Count > 0)
             {
-                GameManager.instance.stopped = false;
                 Battle(attacker.gameObject, battleOpponents[0], false, false);
             }
             else
             {
+                Debug.Log("stopped set to false");
                 GameManager.instance.stopped = false;
                 // enemyStats.inBattle = false;
                 // enemyStats.inList = false;
@@ -269,13 +274,16 @@ public class BattleManager : MonoBehaviour
                 attacker.card.SetActive(false);
             }
 
-           //StartCoroutine(Movement.instance.EndMove(attacker));
+            attacker.inBattle = true;
+            defender.inBattle = true;
+            StartCoroutine(Movement.instance.EndMove(attacker));
+            StartCoroutine(Movement.instance.EndMove(defender));
+            GameManager.instance.stopped = false;
+
             foreach(Stats stats in needToFinish)
             {
                 StartCoroutine(Movement.instance.EndMove(stats));
             }
-            attacker.inBattle = false;
-            //StartCoroutine(Movement.instance.EndMove(GameManager.instance.playerStats));
         }
         else if (defender.gameObject.tag == "Enemy")
         {

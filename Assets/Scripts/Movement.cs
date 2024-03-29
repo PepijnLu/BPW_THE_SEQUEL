@@ -21,6 +21,7 @@ public class Movement : MonoBehaviour
         Vector3 newPosition = new Vector3(0, 0, 0);
         bool moved = false;
         Stats objectToMoveStats = objectToMove.GetComponent<Stats>();
+        objectToMoveStats.doneMoving = false;
         objectToMoveStats.moves++;
 
         switch(direction)
@@ -126,6 +127,7 @@ public class Movement : MonoBehaviour
                 BattleManager.instance.needToFinish.Add(stats);
             }
         }
+        stats.doneMoving = true;
     }
 
     public IEnumerator EndMove(Stats stats)
@@ -163,6 +165,7 @@ public class Movement : MonoBehaviour
                     }
                 }
             }
+            Debug.Log("bools: " + GameManager.instance.stopped + stats.turnDone);
             if ((!GameManager.instance.stopped) && (!stats.turnDone))
             {
                 stats.turnDone = true;
@@ -192,5 +195,6 @@ public class Movement : MonoBehaviour
         Debug.Log("12345 SET BOOLS TO FALSE");
         stats.collisionCheck = true;
         stats.moveStarted = false;
+        stats.tryingToEnd = false;
     }
 }
