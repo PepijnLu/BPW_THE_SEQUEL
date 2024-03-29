@@ -49,17 +49,7 @@ public class PlayerController : MonoBehaviour
                 PlayerTurn();
             }
         }
-        //dev thingies
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            BattleManager.instance.attackMade = true;
-        }
-        if (Input.GetKeyDown(KeyCode.U))
-        {
-            ChestManager.instance.Open();
-            AudioManager.instance.PlaySound(AudioManager.instance.audioSources["chestSFX"]);
-        }
-        //end dev thingies
+        
         if (Input.GetKeyDown(KeyCode.Tab))
         {   
             if (GameManager.instance.stopped == false)

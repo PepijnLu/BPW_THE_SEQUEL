@@ -29,32 +29,6 @@ public class TurnManager : MonoBehaviour
         {
             PassToPlayer();
         }
-        if ((!TurnManager.instance.isPlayerTurn) && (!failSafe) && (Tutorial.instance == null))
-        {
-            StartCoroutine(EnemyTurnFailSafe());
-        }
-    }
-
-    IEnumerator EnemyTurnFailSafe()
-    {
-        failSafe = true;
-        bool broken = false;
-        float duration = 0f;
-        while (duration < 10)
-        {
-            duration += Time.deltaTime;
-            if (GameManager.instance.stopped)
-            {
-                broken = true;
-                break;
-            }
-            yield return null;
-        }
-        if (!broken)
-        {
-            PassToPlayer();
-        }
-        failSafe = false;
     }
     public void CheckActions(GameObject obj)
     {

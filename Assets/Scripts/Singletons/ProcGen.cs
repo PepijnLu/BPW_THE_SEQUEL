@@ -44,10 +44,10 @@ public class ProcGen : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.L))
-        {
-            GenerateDungeon();
-        }
+        // if (Input.GetKeyUp(KeyCode.L))
+        // {
+        //     GenerateDungeon();
+        // }
     }
 
     public void GenerateDungeon()
